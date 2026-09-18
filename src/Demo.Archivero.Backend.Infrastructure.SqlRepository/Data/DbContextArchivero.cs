@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Demo.Archivero.Domain.Entities;
 using Demo.Archivero.Domain.Entities.Bases;
+using Demo.Archivero.Domain.Enums;
 using File = Demo.Archivero.Domain.Entities.File;
 
 namespace Demo.Archivero.Infrastructure.SqlRepository.Data;
@@ -20,6 +21,7 @@ public sealed class DbContextArchivero(DbContextOptions<DbContextArchivero> opti
         b.UseCollation("Latin1_General_100_CI_AS");
 
         ConfigureAppUser(b);
+        ConfigureFile(b);
 
         base.OnModelCreating(b);
     }
@@ -53,6 +55,32 @@ public sealed class DbContextArchivero(DbContextOptions<DbContextArchivero> opti
                 .IsRequired();
 
             e.Property(x => x.LastLoginAtUtc).HasColumnType("datetime2");
+
+            ConfigureAudit(e);
+        });
+    }
+
+    private static void ConfigureFile(ModelBuilder b)
+    {
+        b.Entity<File>(e =>
+        {
+            e.ToTable("Files");
+
+            e.HasKey(x => x.Id);
+            e.Property(x => x.Id).ValueGeneratedOnAdd();
+
+            e.Property(x => x.Title)
+                .HasMaxLength(512)
+                .IsRequired();
+
+            e.Property(x => x.State)
+                .HasConversion<short>()
+                .HasDefaultValue(FileState.None)
+                .IsRequired();
+
+            e.Property(x => x.BlobId)
+                .HasMaxLength(256)
+                .IsRequired();
 
             ConfigureAudit(e);
         });

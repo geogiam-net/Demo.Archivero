@@ -6,6 +6,8 @@ using Demo.Archivero.Infrastructure.SqlRepository.Services;
 using Demo.Archivero.Infrastructure.SqlRepository.Repositories;
 using Demo.Archivero.Infrastructure.SqlRepository.Data;
 using Demo.Archivero.Application.Interfaces.Repositories;
+using Demo.Archivero.Backend.Infrastructure.OpenXml;
+using Demo.Archivero.Backend.Infrastructure.AzureBlob;
 
 
 namespace Demo.Archivero.Api.Startup;
@@ -39,6 +41,8 @@ public static class DependencyInjection
     {
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IDateTimeProvider, DateTimeProvider>();
+        services.AddScoped<IOpenXmlWordService, OpenXmlWordService>();
+        services.AddScoped<IBlobService, BlobService>();
 
         return services;
     }

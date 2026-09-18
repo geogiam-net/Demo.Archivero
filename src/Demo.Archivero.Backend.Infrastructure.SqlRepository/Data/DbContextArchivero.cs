@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Demo.Archivero.Domain.Entities;
 using Demo.Archivero.Domain.Entities.Bases;
+using File = Demo.Archivero.Domain.Entities.File;
 
 namespace Demo.Archivero.Infrastructure.SqlRepository.Data;
 
@@ -10,7 +11,8 @@ public sealed class DbContextArchivero(DbContextOptions<DbContextArchivero> opti
 
     public DbSet<AppUser> AppUsers => Set<AppUser>();
 
-   
+    public DbSet<File> Files => Set<File>();
+
     protected override void OnModelCreating(ModelBuilder b)
     {
         b.HasDefaultSchema(DbSchema);

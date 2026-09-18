@@ -20,6 +20,8 @@
   <ItemGroup>
     <ProjectReference Include="..\Demo.Archivero.Backend.Application\Demo.Archivero.Backend.Application.csproj" />
     <ProjectReference Include="..\Demo.Archivero.Backend.Domain\Demo.Archivero.Backend.Domain.csproj" />
+    <ProjectReference Include="..\Demo.Archivero.Backend.Infrastructure.AzureBlob\Demo.Archivero.Backend.Infrastructure.AzureBlob.csproj" />
+    <ProjectReference Include="..\Demo.Archivero.Backend.Infrastructure.OpenXml\Demo.Archivero.Backend.Infrastructure.OpenXml.csproj" />
     <ProjectReference Include="..\Demo.Archivero.Backend.Infrastructure.SqlRepository\Demo.Archivero.Backend.Infrastructure.SqlRepository.csproj" />
   </ItemGroup>
 </Project>

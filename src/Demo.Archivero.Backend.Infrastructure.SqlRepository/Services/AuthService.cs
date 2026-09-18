@@ -8,6 +8,8 @@ using Demo.Archivero.Infrastructure.SqlRepository.Data;
 using Demo.Archivero.Application.Security;
 using Demo.Archivero.Application.Interfaces.Infrastructure;
 using Demo.Archivero.Application.Dtos.Auth;
+using Demo.Archivero.Application.Dtos;
+using Demo.Archivero.Domain.Enums;
 
 namespace Demo.Archivero.Infrastructure.SqlRepository.Services;
 
@@ -15,7 +17,7 @@ public sealed class AuthService(
     Data.DbContextArchivero db,
     IConfiguration configuration) : IAuthService
 {
-    public async Task<LoginResponseDto?> LoginAsync(
+    public async Task<ResultDto<LoginResponseDto?>> LoginAsync(
         string username,
         string password,
         CancellationToken cancellationToken)
@@ -31,7 +33,8 @@ public sealed class AuthService(
 
             if (user is null || !PasswordHasher.Verify(password, user.PasswordHash))
             {
-                return null;
+                var errorMessages = new List<string> { "Invalid username or password." };
+                return new ResultDto<LoginResponseDto?>(null, Error.NotAuthorized, errorMessages);
             }
 
             user.LastLoginAtUtc = DateTime.UtcNow;
@@ -45,11 +48,12 @@ public sealed class AuthService(
 
             var permissions = AppPermissionCatalog.GetPermissions(user.Role);
             var claims = new List<Claim>
-        {
-            new Claim(JwtRegisteredClaimNames.Sub, user.Username),
-            new Claim(ClaimTypes.Name, user.Username),
-            new Claim(ClaimTypes.Role, user.Role)
-        };
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, user.Username),
+                new Claim(ClaimTypes.Name, user.Username),
+                new Claim(ClaimTypes.Role, user.Role)
+            };
+
             claims.AddRange(permissions.Select(permission => new Claim("permission", permission)));
 
             var credentials = new SigningCredentials(
@@ -63,17 +67,17 @@ public sealed class AuthService(
                 expires: expiresAtUtc,
                 signingCredentials: credentials);
 
-            return new LoginResponseDto(
+            return new ResultDto<LoginResponseDto?>(new LoginResponseDto(
                 new JwtSecurityTokenHandler().WriteToken(token),
                 user.Username,
                 user.Role,
                 permissions,
-                expiresAtUtc);
+                expiresAtUtc));
+
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            var exceptionMessage = $"Error during login for user '{username}': {ex.Message}";
-            throw;
+            return new ResultDto<LoginResponseDto?>(null, Error.InternalServerError, []);
         }
     }
 }

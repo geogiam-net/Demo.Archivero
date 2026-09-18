@@ -2,7 +2,7 @@ namespace Demo.Archivero.Application.Security;
 
 public class JwtSettings
 {
-    public const string ArchiveroJwtConfiguration = "ArchiveroJwtConfiguration";
+    public const string ArchiveroJwtConfiguration = "ArchiveroJwt";
 
     public required string Issuer { get; set; }
 

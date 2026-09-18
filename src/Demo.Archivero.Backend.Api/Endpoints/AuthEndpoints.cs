@@ -9,10 +9,8 @@ public static class AuthEndpoints
 {
     public static IEndpointRouteBuilder MapAuthEndpoints(this IEndpointRouteBuilder app)
     {
-        app.MapGet(Routes.Health, GetHealth);
-
+        app.MapGet(Routes.Ping, GetHealth);
         app.MapPost(Routes.Login, Login);
-
         app.MapGet(Routes.Me, GetMe).RequireAuthorization();
 
         return app;
@@ -37,9 +35,9 @@ public static class AuthEndpoints
             request.Password,
             ct);
 
-        return result is not null
-            ? Results.Ok(result)
-            : Results.Unauthorized();
+        return ResultDtoResultMapper.ToHttpResult(
+            result,
+            employee => TypedResults.Ok(result));
     }
 
     private static IResult GetMe(ClaimsPrincipal user)

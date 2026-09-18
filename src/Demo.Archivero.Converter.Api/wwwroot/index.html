@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dead Km</title>
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="login-mode">
+    <main>
+        <header class="topbar">
+            <div>
+                <h1>Dead KM</h1>
+                <p>Control room &middot; plan vs. real deviations</p>
+            </div>
+            <div class="auth-panel">
+                <div>
+                    <strong id="auth-user-label">Not signed in</strong>
+                    <span id="auth-role-label">Login required</span>
+                </div>
+                <button id="logout-btn" type="button" class="hidden">Logout</button>
+            </div>
+        </header>
+
+        <!-- The whole dashboard (period selector, resume, filters and List 1) is
+             built dynamically by app.js inside this container. -->
+        <div id="dashboard"></div>
+    </main>
+
+    <!-- Invisible blocking layer + loading icon shown while data is fetched. -->
+    <div id="loading-overlay" class="hidden" aria-hidden="true">
+        <div class="spinner" role="status" aria-label="Loading"></div>
+    </div>
+
+    <dialog id="login-dialog" class="login-dialog">
+        <form id="login-form" class="login-form">
+            <h2>Login</h2>
+            <p>Sign in to continue to Dead Km.</p>
+
+            <label for="login-username">Username</label>
+            <input id="login-username" autocomplete="username" required />
+
+            <label for="login-password">Password</label>
+            <input id="login-password" type="password" autocomplete="current-password" required />
+
+            <div id="login-error" class="error-cell" role="alert" aria-live="polite"></div>
+
+            <div class="dialog-actions">
+                <button type="submit">Login</button>
+            </div>
+        </form>
+    </dialog>
+
+    <script src="app.js"></script>
+</body>
+</html>

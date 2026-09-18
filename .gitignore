@@ -1,0 +1,19 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/src/Demo.Archivero.Backend.Api/bin/Debug/net10.0
+/src/Demo.Archivero.Backend.Api/obj
+/src/Demo.Archivero.Backend.Application/bin/Debug/net10.0
+/src/Demo.Archivero.Backend.Application/obj
+/src/Demo.Archivero.Backend.Domain/obj
+/src/Demo.Archivero.Backend.Infrastructure.AzureBlob/obj
+/src/Demo.Archivero.Backend.Infrastructure.OpenXml/obj
+/src/Demo.Archivero.Backend.Infrastructure.SqlRepository/bin/Debug/net10.0
+/src/Demo.Archivero.Backend.Infrastructure.SqlRepository/obj
+/src/Demo.Archivero.Backend.UnitTests/bin/Debug/net10.0
+/src/Demo.Archivero.Backend.UnitTests/obj
+/src/Demo.Archivero.Converter.Api/obj
+/src/Demo.Archivero.Frontend.Spa/bin/Debug/net10.0
+/src/Demo.Archivero.Frontend.Spa/obj

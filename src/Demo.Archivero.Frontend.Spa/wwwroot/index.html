@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <title>Archivero</title>
+    <link rel="icon" href="/favicon.ico?v=1" sizes="any" />
+    <link rel="stylesheet" href="styles.css?v=1" />
+</head>
+<body class="login-mode">
+    <section id="login-view" class="login-view" aria-labelledby="login-title">
+        <div class="login-card">
+            <p class="eyebrow">ARCHIVERO</p>
+            <h1 id="login-title">Welcome back</h1>
+            <p class="login-copy">Sign in to access your Archivero workspace.</p>
+            <form id="login-form" novalidate>
+                <label for="login-username">Username</label>
+                <input id="login-username" name="username" autocomplete="username" required autofocus />
+                <label for="login-password">Password</label>
+                <input id="login-password" name="password" type="password" autocomplete="current-password" required />
+                <p id="login-error" class="form-error" role="alert" aria-live="polite"></p>
+                <button id="login-submit" type="submit">Log in</button>
+            </form>
+        </div>
+    </section>
+
+    <section id="application" class="application" aria-label="Archivero application" hidden>
+        <aside id="sidebar" class="sidebar">
+            <div class="sidebar-top">
+                <a class="app-brand" href="#greeting" data-page-link="greeting" aria-label="Archivero home"><span class="brand-name">Archivero</span></a>
+                <button id="sidebar-toggle" class="icon-button" type="button" aria-label="Collapse menu" aria-expanded="true"><span aria-hidden="true">‹</span></button>
+            </div>
+            <nav class="main-nav" aria-label="Main navigation">
+                <a href="#greeting" class="nav-link active" data-page-link="greeting" aria-current="page"><span class="nav-icon" aria-hidden="true">⌂</span><span class="nav-text">Greeting</span></a>
+                <a href="#archivero" class="nav-link" data-page-link="archivero"><span class="nav-icon" aria-hidden="true">□</span><span class="nav-text">My Archivero</span></a>
+            </nav>
+            <div class="account-area">
+                <div class="user-summary" title="Current user"><span id="user-initial" class="avatar" aria-hidden="true">U</span><span class="user-details"><strong id="current-user">User</strong><small>Signed in</small></span></div>
+                <button id="logout-button" class="logout-button" type="button"><span aria-hidden="true">↪</span><span class="nav-text">Log out</span></button>
+            </div>
+        </aside>
+
+        <main class="content">
+            <button id="mobile-menu-button" class="mobile-menu-button" type="button" aria-label="Open menu" aria-expanded="false">☰</button>
+            <section id="greeting-page" class="page greeting-page" data-page="greeting" aria-labelledby="greeting-heading"><div><p class="eyebrow">YOUR WORKSPACE</p><h2 id="greeting-heading">Hello Friend</h2></div></section>
+            <section id="archivero-page" class="page archivero-page" data-page="archivero" aria-labelledby="archivero-heading" hidden><h2 id="archivero-heading" class="visually-hidden">My Archivero</h2></section>
+        </main>
+    </section>
+    <script src="app.js?v=1"></script>
+</body>
+</html>

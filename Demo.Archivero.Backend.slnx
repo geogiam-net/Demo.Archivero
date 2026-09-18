@@ -1,0 +1,11 @@
+<Solution>
+  <Project Path="src/Demo.Archivero.Backend.Api/Demo.Archivero.Backend.Api.csproj" />
+  <Project Path="src/Demo.Archivero.Backend.Application/Demo.Archivero.Backend.Application.csproj" />
+  <Project Path="src/Demo.Archivero.Backend.Domain/Demo.Archivero.Backend.Domain.csproj" />
+  <Project Path="src/Demo.Archivero.Backend.Infrastructure.SqlRepository./Demo.Archivero.Backend.Infrastructure.SqlRepository.csproj" />
+  <Project Path="src/Demo.Archivero.Backend.UnitTests/Demo.Archivero.Backend.UnitTests.csproj" />
+  <Project Path="src/Demo.Archivero.Converter.Api/Demo.Archivero.Converter.Api.csproj" />
+  <Project Path="src/Demo.Archivero.Frontend.Spa/Demo.Archivero.Frontend.Spa.csproj" />
+  <Project Path="src/Demo.Archivero.Backend.Infrastructure.AzureBlob/Demo.Archivero.Backend.Infrastructure.AzureBlob.csproj" />
+  <Project Path="src/Demo.Archivero.Backend.Infrastructure.OpenXml/Demo.Archivero.Backend.Infrastructure.OpenXml.csproj" />
+</Solution>

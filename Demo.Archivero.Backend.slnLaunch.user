@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Path": "src\\Demo.Archivero.Backend.Api\\Demo.Archivero.Backend.Api.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "src\\Demo.Archivero.Frontend.Spa\\Demo.Archivero.Frontend.Spa.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]

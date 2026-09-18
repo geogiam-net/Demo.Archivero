@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "Demo.Archivero.Frontend.Spa": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:50951;http://localhost:50952"
+    }
+  }
+}

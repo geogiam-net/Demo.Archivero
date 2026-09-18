@@ -1,0 +1,1075 @@
+:root {
+    --bg: #f4f6fb;
+    --panel: #fff;
+    --text: #111827;
+    --muted: #6b7280;
+    --line: #e5e7eb;
+    --accent: #2563eb;
+    --bad: #b91c1c;
+    --shadow: 0 18px 45px rgba(15, 23, 42, .08);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    background: var(--bg);
+    color: var(--text);
+    font-family: Inter, Segoe UI, Arial, sans-serif;
+}
+
+/* ================================================= */
+/* Login mode                                        */
+/* ================================================= */
+
+body.login-mode {
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at 50% 40%, rgba(37, 99, 235, .08), transparent 34rem),
+        #eef1f6;
+}
+
+/* Oversized brand watermark behind the login dialog */
+body.login-mode::before {
+    content: "DEADKM";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    display: grid;
+    place-items: center;
+    color: rgba(15, 23, 42, .06);
+    font-size: clamp(120px, 26vw, 520px);
+    font-weight: 950;
+    line-height: 1;
+    text-align: center;
+    letter-spacing: .02em;
+    pointer-events: none;
+    user-select: none;
+}
+
+body.login-mode main {
+    display: none;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* ================================================= */
+/* App layout                                        */
+/* ================================================= */
+
+main {
+    width: 100%;
+    padding: 32px;
+    min-width: 0;
+}
+
+.topbar {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+    .topbar h1 {
+        margin: 0;
+        font-size: 32px;
+    }
+
+    .topbar p {
+        margin: 7px 0 0;
+        color: var(--muted);
+    }
+
+.auth-panel {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+}
+
+    .auth-panel strong {
+        display: block;
+    }
+
+    .auth-panel span {
+        display: block;
+        margin-top: 2px;
+        color: var(--muted);
+        font-size: 13px;
+    }
+
+.panel {
+    margin-bottom: 20px;
+    padding: 22px;
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    background: var(--panel);
+    box-shadow: var(--shadow);
+    min-width: 0;
+}
+
+    .panel h2 {
+        margin: 0 0 12px;
+        font-size: 20px;
+    }
+
+    .panel p {
+        color: var(--muted);
+        line-height: 1.6;
+    }
+
+/* ================================================= */
+/* Buttons                                           */
+/* ================================================= */
+
+button {
+    border: 0;
+    border-radius: 13px;
+    padding: 11px 16px;
+    background: var(--accent);
+    color: white;
+    cursor: pointer;
+    font-weight: 650;
+    font-size: 14px;
+}
+
+    button:hover {
+        filter: brightness(.95);
+    }
+
+/* ================================================= */
+/* Login dialog + form                               */
+/* ================================================= */
+
+.login-dialog {
+    width: min(480px, calc(100vw - 32px));
+    max-width: none;
+    padding: 28px;
+    border: 1px solid rgba(203, 213, 225, .85);
+    border-radius: 16px;
+    box-shadow: 0 34px 90px rgba(15, 23, 42, .18);
+}
+
+    .login-dialog::backdrop {
+        background: rgba(238, 241, 246, .35);
+    }
+
+.login-form {
+    min-width: 320px;
+    display: grid;
+    gap: 10px;
+}
+
+    .login-form h2,
+    .login-form p {
+        margin: 0;
+    }
+
+    .login-form h2 {
+        font-size: 24px;
+    }
+
+    .login-form p {
+        margin-bottom: 8px;
+        color: var(--muted);
+        line-height: 1.4;
+    }
+
+    .login-form label {
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .login-form input {
+        width: 100%;
+        border: 1px solid #d1d5db;
+        border-radius: 10px;
+        padding: 10px 12px;
+        font-size: 14px;
+        background: #fff;
+        color: var(--text);
+    }
+
+        .login-form input:focus {
+            border-color: var(--accent);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, .15);
+        }
+
+.dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.error-cell {
+    min-height: 20px;
+    color: var(--bad);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* ================================================================= */
+/* Dashboard — dark "control room" theme (logged-in view only).      */
+/* Scoped to body:not(.login-mode) so the light login stays intact.  */
+/* Palette mirrors the maquette (docs/Dead-KM-maquette 1 1.html).     */
+/* ================================================================= */
+
+body:not(.login-mode) {
+    --dk-bg: #0b1220;
+    --dk-panel: #111a2c;
+    --dk-panel2: #16223a;
+    --dk-line: #22304c;
+    --dk-txt: #e6edf7;
+    --dk-muted: #8ea0bd;
+    --dk-faint: #5c6f8f;
+    --dk-accent: #3b82f6;
+    /* Severity colours (README "Data Rules") */
+    --sev-critical: #fca5a5;
+    --sev-moderate: #fcd34d;
+    --sev-weak: #93c5fd;
+    --sev-none: #ffffff;
+    /* Trip / map colours */
+    --trip-commercial: #93c5fd;
+    --trip-under: #cfcc10;
+    --trip-over: #fcd34d;
+    --trip-deadkm: #bbbbbb;
+    --trip-unknown: #6b7280;
+    --map-driven: #000000;       /* Actual path (driven) */
+    --map-commercial: #22d3ee;   /* Commercial paths (cyan) */
+    --map-deadrun: #ffff00;      /* Empty paths (yellow) */
+    --map-highlight: #ff2d2d;    /* Hovered trip's path (red) */
+
+    display: block;
+    background: var(--dk-bg);
+    color: var(--dk-txt);
+}
+
+body:not(.login-mode) main {
+    max-width: 1360px;
+    margin: 0 auto;
+    padding: 22px 24px 48px;
+}
+
+body:not(.login-mode) .topbar h1 {
+    font-size: 24px;
+}
+
+body:not(.login-mode) .topbar p {
+    color: var(--dk-muted);
+    font-size: 13px;
+}
+
+body:not(.login-mode) .auth-panel span {
+    color: var(--dk-muted);
+}
+
+body:not(.login-mode) #logout-btn {
+    background: var(--dk-panel2);
+    border: 1px solid var(--dk-line);
+    color: var(--dk-txt);
+    border-radius: 10px;
+    padding: 8px 14px;
+    font-size: 13px;
+}
+
+    body:not(.login-mode) #logout-btn:hover {
+        border-color: var(--dk-accent);
+        filter: none;
+    }
+
+/* ---------- period selector ---------- */
+.period-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin: 8px 0 6px;
+}
+
+    .period-bar .label {
+        color: var(--dk-faint);
+        font-size: 12px;
+    }
+
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid var(--dk-line);
+    background: var(--dk-panel);
+    color: var(--dk-muted);
+    border-radius: 999px;
+    padding: 6px 14px;
+    font-size: 13px;
+    cursor: pointer;
+    user-select: none;
+}
+
+    .chip:hover {
+        border-color: #33507e;
+        color: var(--dk-txt);
+    }
+
+    .chip.on {
+        background: #1d3050;
+        border-color: var(--dk-accent);
+        color: #dbeafe;
+    }
+
+.custom-range {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+    .custom-range .arrow {
+        color: var(--dk-faint);
+    }
+
+/* Clickable date labels that open the calendar */
+.date-field {
+    background: var(--dk-panel);
+    color: var(--dk-txt);
+    border: 1px solid var(--dk-line);
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: .02em;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+    .date-field:hover {
+        border-color: var(--dk-accent);
+        filter: none;
+    }
+
+/* Calendar popup */
+.range-cal {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    z-index: 60;
+    width: 300px;
+    background: var(--dk-panel);
+    border: 1px solid var(--dk-line);
+    border-radius: 12px;
+    padding: 12px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, .5);
+}
+
+    .range-cal[hidden] {
+        display: none;
+    }
+
+.cal-head {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 10px;
+}
+
+    .cal-head select {
+        flex: 1;
+        background: var(--dk-panel2);
+        color: var(--dk-txt);
+        border: 1px solid var(--dk-line);
+        border-radius: 8px;
+        padding: 6px 8px;
+        font-size: 13px;
+        cursor: pointer;
+    }
+
+.cal-nav {
+    background: var(--dk-panel2);
+    border: 1px solid var(--dk-line);
+    color: var(--dk-txt);
+    border-radius: 8px;
+    padding: 4px 10px;
+    font-size: 16px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+    .cal-nav:hover {
+        border-color: var(--dk-accent);
+        filter: none;
+    }
+
+.cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+}
+
+.cal-dow {
+    text-align: center;
+    font-size: 10px;
+    color: var(--dk-faint);
+    padding: 4px 0;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+}
+
+.cal-days {
+    margin-top: 2px;
+}
+
+.cal-blank {
+    height: 30px;
+}
+
+.cal-day {
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: var(--dk-txt);
+    border-radius: 8px;
+    cursor: pointer;
+    user-select: none;
+    touch-action: manipulation;
+}
+
+    /* plain hover only on selectable days that are not part of the range */
+    .cal-day:hover:not(.disabled):not(.in-range):not(.range-start):not(.range-end) {
+        background: var(--dk-panel2);
+    }
+
+    /* days in the past (before the start) or beyond +30 days: gray text */
+    .cal-day.disabled {
+        color: var(--dk-faint);
+        opacity: .7;
+        cursor: default;
+    }
+
+    /* days inside the picked/hovered range: light blue */
+    .cal-day.in-range {
+        background: var(--sev-weak); /* #93c5fd light blue */
+        color: #0b1220;
+        border-radius: 0;
+    }
+
+    /* range boundaries: solid accent blue */
+    .cal-day.range-start,
+    .cal-day.range-end {
+        background: var(--dk-accent);
+        color: #fff;
+    }
+
+    .cal-day.range-start {
+        border-top-left-radius: 8px;
+        border-bottom-left-radius: 8px;
+    }
+
+    .cal-day.range-end {
+        border-top-right-radius: 8px;
+        border-bottom-right-radius: 8px;
+    }
+
+.range-hint {
+    color: var(--dk-faint);
+    font-size: 12px;
+}
+
+    .range-hint.error {
+        color: #fca5a5;
+    }
+
+/* ---------- section heading ---------- */
+.dash-title {
+    margin: 16px 0 2px;
+    font-size: 19px;
+    font-weight: 700;
+}
+
+.dash-sub {
+    color: var(--dk-muted);
+    font-size: 12px;
+    margin-bottom: 14px;
+}
+
+/* ---------- resume cards ---------- */
+.resume {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin: 12px 0 18px;
+}
+
+.resume-card {
+    background: var(--dk-panel);
+    border: 1px solid var(--dk-line);
+    border-radius: 12px;
+    padding: 14px 16px;
+}
+
+    .resume-card .l {
+        color: var(--dk-muted);
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: .04em;
+    }
+
+    .resume-card .v {
+        font-size: 24px;
+        font-weight: 700;
+        margin-top: 4px;
+        color: var(--dk-txt);
+    }
+
+    .resume-card .d {
+        font-size: 11px;
+        color: var(--dk-faint);
+        margin-top: 3px;
+    }
+
+/* ---------- filters ---------- */
+.filters {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin: 6px 0 16px;
+}
+
+    .filters label {
+        display: inline-flex;
+        flex-direction: column;
+        gap: 4px;
+        font-size: 11px;
+        color: var(--dk-muted);
+        text-transform: uppercase;
+        letter-spacing: .03em;
+    }
+
+    .filters select,
+    .filters input {
+        background: var(--dk-panel);
+        color: var(--dk-txt);
+        border: 1px solid var(--dk-line);
+        border-radius: 8px;
+        padding: 8px 10px;
+        font-size: 13px;
+        min-width: 170px;
+        text-transform: none;
+        letter-spacing: normal;
+    }
+
+        .filters select:focus,
+        .filters input:focus {
+            outline: none;
+            border-color: var(--dk-accent);
+        }
+
+    .filters input#filter-plate {
+        text-transform: uppercase;
+    }
+
+/* ---------- shift list ---------- */
+.shift-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.empty-msg {
+    background: var(--dk-panel);
+    border: 1px solid var(--dk-line);
+    border-radius: 12px;
+    padding: 26px;
+    color: var(--dk-muted);
+    text-align: center;
+}
+
+/* API error surfaced from ResultDto.errors (shown regardless of HTTP status) */
+.empty-msg.load-error {
+    border-color: #7f1d1d;
+    background: #3f142033;
+    color: var(--sev-critical);
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.shift-card {
+    background: var(--dk-panel);
+    border: 1px solid var(--dk-line);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+    .shift-card.open {
+        border-color: var(--dk-accent);
+    }
+
+.shift-head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    cursor: pointer;
+    user-select: none;
+    /* Gap left above the title when it is scrolled to the top on expand. */
+    scroll-margin-top: 12px;
+}
+
+    .shift-head:hover {
+        background: var(--dk-panel2);
+    }
+
+    .shift-head .icon {
+        font-size: 20px;
+        line-height: 1;
+    }
+
+    .shift-head .plate {
+        font-weight: 700;
+        font-size: 15px;
+        letter-spacing: .04em;
+    }
+
+    .shift-head .grow {
+        flex: 1;
+        display: flex;
+        align-items: baseline;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .shift-head .date {
+        color: var(--dk-faint);
+        font-size: 12px;
+    }
+
+    .shift-head .sev {
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .shift-head .deadkm {
+        font-size: 17px;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+
+/* severity text colours */
+.sev-3 { color: var(--sev-critical); }
+.sev-2 { color: var(--sev-moderate); }
+.sev-1 { color: var(--sev-weak); }
+.sev-0 { color: var(--sev-none); }
+
+/* ---------- expanded detail ---------- */
+.shift-detail {
+    border-top: 1px dashed var(--dk-line);
+    padding: 16px;
+}
+
+.section-title {
+    font-size: 12px;
+    color: var(--dk-muted);
+    text-transform: uppercase;
+    letter-spacing: .03em;
+    margin-bottom: 8px;
+}
+
+/* trip bar */
+.trip-bar {
+    display: flex;
+    width: 100%;
+    height: 68px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--dk-line);
+}
+
+    .trip-bar .trip {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        border-right: 1px solid rgba(0, 0, 0, .35);
+        min-width: 42px;
+        padding: 2px;
+        overflow: hidden;
+        text-align: center;
+        cursor: pointer;
+    }
+
+        .trip-bar .trip:last-child {
+            border-right: none;
+        }
+
+        .trip-bar .trip .m {
+            font-weight: 700;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        /* "NO DATA" may wrap to two lines when the segment is narrow. */
+        .trip-bar .trip .m.nodata {
+            white-space: normal;
+            line-height: 1.1;
+        }
+
+        .trip-bar .trip .diff {
+            font-weight: 700;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+.trip-legend {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+    font-size: 11px;
+    color: var(--dk-muted);
+}
+
+    .trip-legend .sw {
+        display: inline-block;
+        width: 14px;
+        height: 10px;
+        border-radius: 3px;
+        vertical-align: middle;
+        margin-right: 5px;
+    }
+
+/* split: trip details (left 40%) + map (right 60%) */
+.detail-split {
+    display: flex;
+    gap: 16px;
+    margin-top: 18px;
+    align-items: flex-start;
+}
+
+    .detail-split .trip-details {
+        flex: 0 0 40%;
+        max-width: 40%;
+        min-width: 0;
+    }
+
+    .detail-split .map-wrap {
+        flex: 1 1 60%;
+        min-width: 0;
+        margin-top: 0;
+    }
+
+/* stack on narrow screens: details on top, map below */
+@media (max-width: 760px) {
+    .detail-split {
+        flex-direction: column;
+    }
+
+        .detail-split .trip-details,
+        .detail-split .map-wrap {
+            flex-basis: auto;
+            max-width: none;
+            width: 100%;
+        }
+}
+
+/* trip details table — height matches the map, scrolls when overflowing */
+.trip-table-scroll {
+    height: 460px; /* keep in sync with .map height */
+    overflow-y: auto;
+    border: 1px solid var(--dk-line);
+    border-radius: 10px;
+}
+
+.trip-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    color: var(--dk-txt);
+}
+
+    .trip-table th,
+    .trip-table td {
+        padding: 5px 6px;
+        text-align: left;
+        border-bottom: 1px solid var(--dk-line);
+        vertical-align: top;
+        white-space: nowrap;
+    }
+
+    /* Only the long From/To station names wrap, so the table stays narrow
+       instead of forcing a horizontal scrollbar in the 40% panel. */
+    .trip-table td.wrap {
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
+
+    .trip-table th {
+        position: sticky;
+        top: 0;
+        background: var(--dk-panel, #1e293b);
+        color: var(--dk-muted);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: .02em;
+        font-size: 11px;
+        white-space: normal; /* headers may wrap ("Start Time" -> two lines) */
+        z-index: 1;
+    }
+
+    .trip-table td.num,
+    .trip-table th.num {
+        text-align: right;
+    }
+
+    .trip-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .trip-table .nodata {
+        color: var(--dk-faint);
+    }
+
+/* map */
+.map-wrap {
+    margin-top: 18px;
+}
+
+.map {
+    position: relative;
+    width: 100%;
+    height: 460px;
+    border-radius: 10px;
+    border: 1px solid var(--dk-line);
+    overflow: hidden;
+    background: #0a1526;
+    cursor: grab;
+    touch-action: none; /* we handle pan/pinch ourselves */
+}
+
+    .map.dragging {
+        cursor: grabbing;
+    }
+
+    /* wrapper translated live during a pan drag */
+    .map .map-pan {
+        position: absolute;
+        inset: 0;
+        will-change: transform;
+    }
+
+    .map .tiles {
+        position: absolute;
+        inset: 0;
+    }
+
+    .map .tiles img {
+        position: absolute;
+        width: 256px;
+        height: 256px;
+        user-select: none;
+        pointer-events: none;
+    }
+
+    .map svg {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+    }
+
+    .map .attribution {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        background: rgba(11, 18, 32, .75);
+        color: var(--dk-muted);
+        font-size: 10px;
+        padding: 2px 6px;
+        border-top-left-radius: 6px;
+    }
+
+    /* zoom in / out controls */
+    .map .map-zoom {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        z-index: 5;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+        .map .map-zoom button {
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            font-size: 20px;
+            line-height: 1;
+            border-radius: 8px;
+            background: rgba(17, 26, 44, .92);
+            border: 1px solid var(--dk-line);
+            color: var(--dk-txt);
+            cursor: pointer;
+        }
+
+            .map .map-zoom button:hover {
+                border-color: var(--dk-accent);
+                filter: none;
+            }
+
+    .map .map-empty {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        color: var(--dk-faint);
+        font-size: 13px;
+        text-align: center;
+        padding: 20px;
+    }
+
+/* map layer toggles (double as the path legend) */
+.map-controls {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+}
+
+    .map-controls .map-toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 5px 10px;
+        font-size: 11px;
+        color: var(--dk-text, #e2e8f0);
+        background: var(--dk-panel, #1e293b);
+        border: 1px solid var(--dk-line);
+        border-radius: 999px;
+        cursor: pointer;
+        user-select: none;
+    }
+
+        /* "off" state: dimmed + struck through so hidden layers read clearly. */
+        .map-controls .map-toggle:not(.on) {
+            opacity: .45;
+            text-decoration: line-through;
+        }
+
+        .map-controls .map-toggle .sw {
+            display: inline-block;
+            width: 16px;
+            height: 4px;
+            border-radius: 2px;
+            /* light hairline so the black "Actual path" swatch stays visible */
+            box-shadow: 0 0 0 1px rgba(255, 255, 255, .35);
+        }
+
+    /* Play / Stop bus-animation buttons, pushed to the right of the toggles */
+    .map-controls .map-anim-group {
+        margin-left: auto;
+        display: inline-flex;
+        gap: 6px;
+    }
+
+        .map-controls .map-anim {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 26px;
+            padding: 0;
+            font-size: 12px;
+            line-height: 1;
+            color: var(--dk-text, #e2e8f0);
+            background: var(--dk-panel, #1e293b);
+            border: 1px solid var(--dk-line);
+            border-radius: 8px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+            .map-controls .map-anim:hover {
+                border-color: var(--dk-accent);
+            }
+
+            .map-controls .map-anim[data-anim="play"] {
+                color: #22c55e;
+            }
+
+            .map-controls .map-anim[data-anim="stop"] {
+                color: #f87171;
+            }
+
+/* animated bus marker travelling the driven path */
+.map .map-bus {
+    position: absolute;
+    z-index: 4;
+    font-size: 22px;
+    line-height: 1;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, .6));
+    will-change: left, top;
+}
+
+/* ---------- loading overlay (invisible blocker + spinner) ---------- */
+#loading-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 900;
+    display: grid;
+    place-items: center;
+    background: rgba(11, 18, 32, .28);
+    cursor: progress;
+}
+
+.spinner {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    border: 4px solid rgba(147, 197, 253, .25);
+    border-top-color: var(--dk-accent, #3b82f6);
+    animation: dk-spin .8s linear infinite;
+}
+
+@keyframes dk-spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ---------- responsive ---------- */
+@media (max-width: 900px) {
+    .resume {
+        grid-template-columns: 1fr;
+    }
+
+    .filters select,
+    .filters input {
+        min-width: 0;
+        width: 100%;
+    }
+
+    .filters label {
+        flex: 1 1 100%;
+    }
+
+    body:not(.login-mode) main {
+        padding: 16px 14px 40px;
+    }
+
+    .shift-head .grow {
+        gap: 6px;
+    }
+}
+

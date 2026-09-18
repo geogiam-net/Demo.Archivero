@@ -1,0 +1,38 @@
+@HostAddress = http://localhost:50950
+@Token = qwerty
+
+### Ok Health
+
+GET {{HostAddress}}/api/health
+Content-Type: application/json
+Accept: application/json
+
+
+### Ok Authorization
+
+POST {{HostAddress}}/api/auth/login
+Content-Type: application/json
+Accept: application/json
+
+{
+  "Username": "",
+  "Password": ""
+}
+
+### Test authorizing with invalid data
+
+POST {{HostAddress}}/api/auth/login
+Content-Type: application/json
+Accept: application/json
+
+{
+  "Username": "internet",
+  "Password": "troll!"
+}
+
+### Ok me
+
+GET {{HostAddress}}/api/auth/me
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{Token}}

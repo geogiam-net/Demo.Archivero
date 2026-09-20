@@ -76,7 +76,7 @@ app.MapFileEndpoints();
 app.MapGet(Routes.Ping, () => Results.Ok(new
 {
     status = "ok",
-    service = "Archivero API is up"
+    service = "Archivero.Backend API is up"
 }));
 
 app.Run();

@@ -24,13 +24,22 @@ public sealed class BlobService(
             return null;
         }
 
-        var blobId = Guid.NewGuid().ToString("N");
+        var blobId = Guid.NewGuid().ToString("N") + ".docx";
 
         try
         {
             var containerClient = await GetContainerClientAsync(ct);
+
+            var options = new BlobUploadOptions
+            {
+                HttpHeaders = new BlobHttpHeaders
+                {
+                    ContentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                }
+            };
+
             await GetUserBlobClient(containerClient, userId, blobId)
-                .UploadAsync(content, overwrite: true, cancellationToken: ct);
+                .UploadAsync(content, options, ct);
 
             logger.LogInformation("Blob {BlobName} uploaded for user {UserId}.", blobId, userId);
             return blobId;

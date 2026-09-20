@@ -34,6 +34,7 @@
             <nav class="main-nav" aria-label="Main navigation">
                 <a href="#greeting" class="nav-link active" data-page-link="greeting" aria-current="page"><span class="nav-icon" aria-hidden="true">⌂</span><span class="nav-text">Greeting</span></a>
                 <a href="#archivero" class="nav-link" data-page-link="archivero"><span class="nav-icon" aria-hidden="true">□</span><span class="nav-text">My Archivero</span></a>
+                <a href="#create-archive" class="nav-link" data-page-link="create-archive"><span class="nav-icon" aria-hidden="true">＋</span><span class="nav-text">Create Archive</span></a>
             </nav>
             <div class="account-area">
                 <div class="user-summary" title="Current user"><span id="user-initial" class="avatar" aria-hidden="true">U</span><span class="user-details"><strong id="current-user">User</strong><small>Signed in</small></span></div>
@@ -44,9 +45,22 @@
         <main class="content">
             <button id="mobile-menu-button" class="mobile-menu-button" type="button" aria-label="Open menu" aria-expanded="false">☰</button>
             <section id="greeting-page" class="page greeting-page" data-page="greeting" aria-labelledby="greeting-heading"><div><p class="eyebrow">YOUR WORKSPACE</p><h2 id="greeting-heading">Hello Friend</h2></div></section>
-            <section id="archivero-page" class="page archivero-page" data-page="archivero" aria-labelledby="archivero-heading" hidden><h2 id="archivero-heading" class="visually-hidden">My Archivero</h2></section>
+            <section id="archivero-page" class="page workspace-page" data-page="archivero" aria-labelledby="archivero-heading" hidden>
+                <div class="page-header"><div><p class="page-kicker">YOUR FILES</p><h2 id="archivero-heading">My Archivero</h2><p>Files created in your workspace.</p></div></div>
+                <div class="table-card"><div id="files-status" class="status-message" role="status" aria-live="polite"></div><div class="table-scroll"><table><thead><tr><th>Creation</th><th>Title</th><th>Download</th><th>Delete</th></tr></thead><tbody id="files-table-body"></tbody></table></div></div>
+            </section>
+            <section id="create-archive-page" class="page workspace-page" data-page="create-archive" aria-labelledby="create-archive-heading" hidden>
+                <div class="page-header"><div><p class="page-kicker">NEW FILE</p><h2 id="create-archive-heading">Create Archive</h2><p>Save text to your Archivero workspace.</p></div></div>
+                <form id="create-archive-form" class="archive-form" novalidate>
+                    <label for="archive-title">Title</label><input id="archive-title" name="title" maxlength="512" required />
+                    <label for="archive-content">Text</label><textarea id="archive-content" name="content" maxlength="256" required></textarea>
+                    <button id="create-archive-submit" type="submit">Create archive</button>
+                    <p id="create-archive-message" class="form-error" role="status" aria-live="polite"></p>
+                </form>
+            </section>
         </main>
     </section>
+    <div id="loading-overlay" class="loading-overlay" hidden aria-hidden="true"><div class="spinner" role="status" aria-label="Loading"></div></div>
     <script src="app.js?v=1"></script>
 </body>
 </html>

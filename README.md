@@ -1,8 +1,12 @@
 # Design of Demo.Archivero
 
+the application works with collation: Latin1_General_100_CI_AS
+
 ## Demo.Archivero.Frontend.Spa:
 
 The Frontend is a single page application programmed by an AI agent, it only delivers one single html, css, js and favicon files to the browser. The whole interface is responsive to different sizes and devices.
+
+Everytime the user does an action that internally invokes an API, we block the user interface events and interactions by adding an invisible layer on top of the screen, we also display a loading icon until the action finishes.
 
 ## Demo.Archivero.Backend.Api
 
@@ -26,8 +30,9 @@ The left panel works as a menu, on top are the link content pages, below the nam
 The menu has the following link content pages:
 Greeting (default)
 My Archivero
+Create Archive
 
-Then the user clicks a link content page in the menu, the previous link content page is hidden (not removed from the DOM) and the selected one is displayed in the right panel, the option in the menus is highlighted
+Then the user clicks a link content page in the menu, the previous link content page is hidden (not removed from the DOM) and the selected one is displayed in the right panel, the option in the menus is highlighted.
 
 ### Greeting content page
 
@@ -35,4 +40,20 @@ A blue page, with a white text that reads: "Hello Friend".
 
 ### My Archivero content page
 
-An empty white page.
+It displays a table with the list of the files the user owns, when the content page opens, query app.MapGet(Routes.GetFiles, GetFiles) and then construct the table.
+
+| Creation                             |           Title            |                Download                 |                            Delete                            |
+| ------------------------------------ | :------------------------: | :-------------------------------------: | :----------------------------------------------------------: |
+| Date and time formatted US-EN format | Title, maximal 400px width | button pointing to URL to download blob | button with fileId pointing to Api method to delete the file |
+
+The Api method to delete files is app.MapDelete(Routes.DeleteFile, DeleteFile), once clicked, the Api call is made, and also the item is removed from the table.
+
+### Create Archive content page
+
+The page has a form to enter a title in a text box, below there is another and bigger textbox to enter any text, below there is a button to post the form and create a file, the button calls app.MapPost(Routes.CreateFile, CreateFile), below the button we displays any error in red, else we display in blue "Succesful, creation process started, please check later your Archivero".
+
+After succesfully posting the form, all textboxes and button are deactivated.
+
+Everytime we enter this contenct page, the form is reset.
+
+The textboxes muss have a character limit as it is configured for the entity File at DbContextArchivero.

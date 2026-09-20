@@ -1,13 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Demo.Archivero.Api.Services;
-using Demo.Archivero.Application.Interfaces.Infrastructure;
+﻿using Demo.Archivero.Api.Services;
 using Demo.Archivero.Application.Interfaces;
-using Demo.Archivero.Infrastructure.SqlRepository.Services;
-using Demo.Archivero.Infrastructure.SqlRepository.Repositories;
-using Demo.Archivero.Infrastructure.SqlRepository.Data;
+using Demo.Archivero.Application.Interfaces.Application;
+using Demo.Archivero.Application.Interfaces.Infrastructure;
 using Demo.Archivero.Application.Interfaces.Repositories;
-using Demo.Archivero.Backend.Infrastructure.OpenXml;
+using Demo.Archivero.Application.Services;
 using Demo.Archivero.Backend.Infrastructure.AzureBlob;
+using Demo.Archivero.Backend.Infrastructure.OpenXml;
+using Demo.Archivero.Infrastructure.SqlRepository.Data;
+using Demo.Archivero.Infrastructure.SqlRepository.Repositories;
+using Demo.Archivero.Infrastructure.SqlRepository.Services;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace Demo.Archivero.Api.Startup;
@@ -41,6 +43,8 @@ public static class DependencyInjection
     public static IServiceCollection AddServices(this IServiceCollection services)
     {
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IFileService, FileService>();
+
         services.AddScoped<IDateTimeProvider, DateTimeProvider>();
         services.AddScoped<IOpenXmlWordService, OpenXmlWordService>();
         services.AddScoped<IBlobService, BlobService>();

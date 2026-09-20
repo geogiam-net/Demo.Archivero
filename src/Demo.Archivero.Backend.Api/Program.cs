@@ -1,7 +1,8 @@
-﻿using Microsoft.OpenApi;
+﻿using Demo.Archivero.Api;
 using Demo.Archivero.Api.Endpoints;
 using Demo.Archivero.Api.Startup;
 using Demo.Archivero.Api.StartUp;
+using Microsoft.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -70,7 +71,14 @@ app.UseStatusCodePages();
 app.UseExceptionHandler();
 
 app.MapAuthEndpoints();
+app.MapFileEndpoints();
 
 app.MapFallbackToFile("index.html");
+
+app.MapGet(Routes.Ping, () => Results.Ok(new
+{
+    status = "ok",
+    service = "Archivero API is up"
+}));
 
 app.Run();

@@ -11,6 +11,14 @@ public sealed class UserRepository(
     Data.DbContextArchivero db)
     : IUserRepository
 {
+    public async Task<AppUser?> GetUserAsync(string username, CancellationToken ct)
+    {
+        return await db.AppUsers
+            .AsNoTracking()
+            .Where(x => x.IsActive && x.Username == username)
+            .FirstOrDefaultAsync(ct);
+    }
+
     public async Task<IReadOnlyList<UserDto>> GetUsersAsync(
         CancellationToken ct)
     {

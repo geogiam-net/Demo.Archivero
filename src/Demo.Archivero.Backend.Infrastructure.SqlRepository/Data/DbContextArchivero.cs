@@ -97,9 +97,13 @@ public sealed class DbContextArchivero(DbContextOptions<DbContextArchivero> opti
     private static void ConfigureAudit<T>(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<T> e)
         where T : EntityBase
     {
-        e.Property(x => x.CreatedAtUtc).HasColumnType("datetime2");
+        e.Property(x => x.CreatedAtUtc)
+            .HasColumnType("datetime2")
+            .IsRequired();
         e.Property(x => x.UpdatedAtUtc).HasColumnType("datetime2");
-        e.Property(x => x.CreatedBy).HasMaxLength(256);
+        e.Property(x => x.CreatedBy)
+            .HasMaxLength(256)
+            .IsRequired();
         e.Property(x => x.UpdatedBy).HasMaxLength(256);
     }
 }

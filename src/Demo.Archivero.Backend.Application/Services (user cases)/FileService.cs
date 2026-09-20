@@ -4,9 +4,9 @@ using Demo.Archivero.Application.Interfaces;
 using Demo.Archivero.Application.Interfaces.Application;
 using Demo.Archivero.Application.Interfaces.Infrastructure;
 using Demo.Archivero.Application.Interfaces.Repositories;
+using Demo.Archivero.Backend.Application.Settings;
 using Microsoft.Extensions.Logging;
 using System.Net;
-using FileEntity = Demo.Archivero.Domain.Entities.File;
 
 namespace Demo.Archivero.Application.Services;
 
@@ -15,7 +15,6 @@ public class FileService(
     IUserRepository userRepository,
     ILogger<FileService> logger,
     IDateTimeProvider dateTimeProvider,
-    IOpenXmlWordService openXmlWordService,
     IBlobService blobService
     ) : IFileService
 {
@@ -30,12 +29,20 @@ public class FileService(
         }
 
         title = title.Trim();
-        if (title.Length > 512)
+        if (title.Length > EntitiesSettings.FileTitleMaxLength)
         {
             return new ResultDto<bool>(
                 false,
                 Domain.Enums.Error.ValidationError,
-                new[] { "File title cannot exceed 512 characters." });
+                new[] { $"File title cannot exceed {EntitiesSettings.FileTitleMaxLength} characters." });
+        }
+
+        if (content?.Length > EntitiesSettings.FileContentMaxLength)
+        {
+            return new ResultDto<bool>(
+                false,
+                Domain.Enums.Error.ValidationError,
+                new[] { $"File content cannot exceed {EntitiesSettings.FileContentMaxLength} characters." });
         }
 
         var user = await userRepository.GetUserAsync(username, ct);
@@ -47,31 +54,6 @@ public class FileService(
 
         // Demo.Archivero.Backend.Api only sends data to queue for creation by another server
         logger.LogInformation("File set for creation by user: {Username} at {CreatedAt}", username, dateTimeProvider.UtcNow);
-
-        // ########################################################################################
-
-        // second server creates file, blob, then saves entry into database
-        using (var stream = openXmlWordService.CreateDocument(title, content)) 
-        {
-            var blobId = await blobService.UploadToBlobAsync(user.Id, stream, ct);
-            if (blobId is null) 
-            {
-                return new ResultDto<bool>(false, Domain.Enums.Error.InternalServerError, new[] { "Failed to upload blob." });
-            }
-
-            // EF Core persists this value as a parameter; do not SQL-escape user text.
-            FileEntity newFile = new FileEntity
-            {
-                Title = title,
-                BlobId = blobId,
-                OwnerId = user.Id,
-                Status = Domain.Enums.FileStatus.Available
-            };
-
-            var id = await fileRepository.CreateFileAsync(newFile, user, ct);
-
-            logger.LogInformation("File created: {FileId} by user: {Username} at {CreatedAt}", id, username, dateTimeProvider.UtcNow);
-        }
 
         return new ResultDto<bool>(true);
     }
@@ -114,30 +96,6 @@ public class FileService(
         if (result.Result)
         {
             logger.LogInformation("File marked for deletion: {FileId} by user: {Username} at {DeletedAt}", fileId, username, dateTimeProvider.UtcNow);
-        }
-
-        // ########################################################################################
-
-        // second server deletes blob, then file entry in database
-
-        var file = await fileRepository.GetFileAsync(fileId, ct);
-
-        if (file is null)
-        {
-            return new ResultDto<bool>(
-                false,
-                Domain.Enums.Error.NotFound,
-                new List<string> { "File not found." }
-            );
-        }
-
-        await blobService.DeleteBlobAsync(user.Id, file.BlobId, ct);
-
-        await fileRepository.DeleteFileAsync(fileId, ct);
-
-        if (result.Result)
-        {
-            logger.LogInformation("File deleted: {FileId} by user: {Username} at {DeletedAt}", fileId, username, dateTimeProvider.UtcNow);
         }
 
         return result;

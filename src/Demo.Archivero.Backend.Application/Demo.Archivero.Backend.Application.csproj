@@ -11,10 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Settings\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Demo.Archivero.Backend.Domain\Demo.Archivero.Backend.Domain.csproj" />
   </ItemGroup>
 

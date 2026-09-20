@@ -52,8 +52,8 @@
             <section id="create-archive-page" class="page workspace-page" data-page="create-archive" aria-labelledby="create-archive-heading" hidden>
                 <div class="page-header"><div><p class="page-kicker">NEW FILE</p><h2 id="create-archive-heading">Create Archive</h2><p>Save text to your Archivero workspace.</p></div></div>
                 <form id="create-archive-form" class="archive-form" novalidate>
-                    <label for="archive-title">Title</label><input id="archive-title" name="title" maxlength="512" required />
-                    <label for="archive-content">Text</label><textarea id="archive-content" name="content" maxlength="256" required></textarea>
+                    <label for="archive-title">Title</label><input id="archive-title" name="title" maxlength="128" aria-describedby="archive-title-limit" required /><small id="archive-title-limit" class="character-limit">0 / 128 characters</small>
+                    <label for="archive-content">Text</label><textarea id="archive-content" name="content" maxlength="1028" aria-describedby="archive-content-limit" required></textarea><small id="archive-content-limit" class="character-limit">0 / 1,028 characters</small>
                     <button id="create-archive-submit" type="submit">Create archive</button>
                     <p id="create-archive-message" class="form-error" role="status" aria-live="polite"></p>
                 </form>

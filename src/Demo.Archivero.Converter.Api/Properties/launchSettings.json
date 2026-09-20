@@ -1,12 +1,13 @@
 {
   "profiles": {
-    "Slg.DeadKm.Api": {
+    "Demo.Archivero.Converter.Api": {
       "commandName": "Project",
       "launchBrowser": true,
+      "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "https://localhost:50949;http://localhost:50950"
+      "applicationUrl": "https://localhost:50953;http://localhost:50954"
     }
   }
 }

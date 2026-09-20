@@ -9,6 +9,8 @@ public sealed class File: EntityBase
 
     public string Title { get; set; } = "";
 
+    public string Content { get; set; } = "";
+
     public FileStatus Status { get; set; } = FileStatus.None;
 
     public string BlobId { get; set; } = "";

@@ -45,9 +45,8 @@ public static class DependencyInjection
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IFileService, FileService>();
 
-        services.AddScoped<IDateTimeProvider, DateTimeProvider>();
-        services.AddScoped<IOpenXmlWordService, OpenXmlWordService>();
         services.AddScoped<IBlobService, BlobService>();
+        services.AddScoped<IDateTimeProvider, DateTimeProvider>();
 
         return services;
     }

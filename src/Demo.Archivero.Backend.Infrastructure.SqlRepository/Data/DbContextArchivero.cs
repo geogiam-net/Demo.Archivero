@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Demo.Archivero.Domain.Entities;
 using Demo.Archivero.Domain.Entities.Bases;
 using Demo.Archivero.Domain.Enums;
+using Demo.Archivero.Backend.Application.Settings;
 using File = Demo.Archivero.Domain.Entities.File;
 
 namespace Demo.Archivero.Infrastructure.SqlRepository.Data;
@@ -70,7 +71,11 @@ public sealed class DbContextArchivero(DbContextOptions<DbContextArchivero> opti
             e.Property(x => x.Id).ValueGeneratedOnAdd();
 
             e.Property(x => x.Title)
-                .HasMaxLength(512)
+                .HasMaxLength(EntitiesSettings.FileTitleMaxLength)
+                .IsRequired();
+
+            e.Property(x => x.Content)
+                .HasMaxLength(EntitiesSettings.FileContentMaxLength)
                 .IsRequired();
 
             e.Property(x => x.Status)

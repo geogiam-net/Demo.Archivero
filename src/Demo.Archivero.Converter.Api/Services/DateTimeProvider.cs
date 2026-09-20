@@ -1,6 +1,6 @@
-using Slg.DeadKm.Application.Interfaces;
+using Demo.Archivero.Application.Interfaces;
 
-namespace Slg.DeadKm.Api.Services;
+namespace Demo.Archivero.Converter.Api.Services;
 
 /// <summary>
 /// Default <see cref="IDateTimeProvider"/> backed by the real system clock.

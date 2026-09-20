@@ -1,31 +1,28 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Slg.DeadKm.Api.Services;
-using Slg.DeadKm.Api.Workers;
-using Slg.DeadKm.Application.Interfaces;
-using Slg.DeadKm.Application.Interfaces.Application;
-using Slg.DeadKm.Application.Interfaces.Infrastructure;
-using Slg.DeadKm.Application.Interfaces.Repositories;
-using Slg.DeadKm.Application.Services;
-using Slg.DeadKm.Application.Settings;
-using Slg.DeadKm.Infrastructure.DataClients.GeoPortal;
-using Slg.DeadKm.Infrastructure.DataClients.IvuDataSource;
-using Slg.DeadKm.Infrastructure.DataClients.TomTom;
-using Slg.DeadKm.Infrastructure.DataClients.WebFleetBlob;
-using Slg.DeadKm.Infrastructure.SqlRepository.Data;
-using Slg.DeadKm.Infrastructure.SqlRepository.Repositories;
-using Slg.DeadKm.Infrastructure.SqlRepository.Services;
+﻿using Demo.Archivero.Converter.Api.Services;
+using Demo.Archivero.Application.Interfaces;
+using Demo.Archivero.Application.Interfaces.Application;
+using Demo.Archivero.Application.Interfaces.Infrastructure;
+using Demo.Archivero.Application.Interfaces.Repositories;
+using Demo.Archivero.Application.Services;
+using Demo.Archivero.Backend.Infrastructure.AzureBlob;
+using Demo.Archivero.Backend.Infrastructure.OpenXml;
+using Demo.Archivero.Infrastructure.SqlRepository.Data;
+using Demo.Archivero.Infrastructure.SqlRepository.Repositories;
+using Demo.Archivero.Infrastructure.SqlRepository.Services;
+using Microsoft.EntityFrameworkCore;
 
-namespace Slg.DeadKm.Api.Startup;
+
+namespace Demo.Archivero.Converter.Api.Startup;
 
 public static class DependencyInjection
 {
-    public const string DatabaseConnectionName = "DeadKmSqlServer";
+    public const string DatabaseConnectionName = "ArchiveroDB";
 
     public static void AddDatabase(this IServiceCollection services, IConfiguration configuration)
     {
         var connectionString = configuration.GetConnectionString(DatabaseConnectionName);
 
-        services.AddDbContext<DeadKmDbContext>(options => 
+        services.AddDbContext<DbContextArchivero>(options => 
             options.UseSqlServer(connectionString, sqlOptions =>
             {
                 sqlOptions.EnableRetryOnFailure(
@@ -38,39 +35,21 @@ public static class DependencyInjection
     public static IServiceCollection AddRepositories(this IServiceCollection services)
     {
         services.AddScoped<IUserRepository, UserRepository>();
-        services.AddScoped<IVehicleShiftRepository, VehicleShiftRepository>();
-        services.AddScoped<IGeoPortalLineRepository, GeoPortalLineRepository>();
-        services.AddScoped<IWebFleetTrackingRepository, WebFleetTrackingRepository>();
+        services.AddScoped<IFileRepository, FileRepository>();
 
         return services;
     }
 
     public static IServiceCollection AddServices(this IServiceCollection services)
     {
-        services.AddScoped<IAuthService, AuthService>();
+        // services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IWordFileService, WordFileService>();
+
         services.AddScoped<IDateTimeProvider, DateTimeProvider>();
-        services.AddScoped<IRouteFinder, TomTomRoutingService>();
-        services.AddScoped<IVehicleShiftService, VehicleShiftService>();
-        services.AddScoped<IIvuDataSourceService, IvuDataSourceService>();
-
-        // Fixed algorithm thresholds - single hardcoded instance, not bound to configuration.
-        services.AddSingleton<IVehicleShiftSettings, VehicleShiftSettings>();
-
-        // For Workers: Import services are keyed by data source; resolve with [FromKeyedServices(ImportServiceKeys.X)].
-        services.AddKeyedScoped<IImportService, GeoPortalImportService>(ImportServiceKeys.GeoPortal);
-        services.AddKeyedScoped<IImportService, WebFleetBlobImportService>(ImportServiceKeys.WebFleet);
+        services.AddScoped<IOpenXmlWordService, OpenXmlWordService>();
+        services.AddScoped<IBlobService, BlobService>();
 
         return services;
     }
 
-    public static IServiceCollection AddWorkers(this IServiceCollection services, IConfiguration configuration)
-    {
-        services.Configure<WorkerSettings>(configuration.GetSection(WorkerSettings.SectionName));
-
-        services.AddHostedService<GeoPortalImportWorker>();
-        services.AddHostedService<WebFleetBlobImportWorker>();
-        services.AddHostedService<VehicleShiftPrecalculationWorker>();
-
-        return services;
-    }
 }

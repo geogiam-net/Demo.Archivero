@@ -111,6 +111,14 @@
         $('#create-archive-message').textContent = '';
         $('#create-archive-message').classList.remove('success');
         ['#archive-title', '#archive-content', '#create-archive-submit'].forEach((selector) => { $(selector).disabled = false; });
+        updateCharacterCounts();
+    }
+
+    function updateCharacterCounts() {
+        const title = $('#archive-title');
+        const content = $('#archive-content');
+        $('#archive-title-limit').textContent = `${title.value.length} / ${title.maxLength} characters`;
+        $('#archive-content-limit').textContent = `${content.value.length.toLocaleString('en-US')} / ${content.maxLength.toLocaleString('en-US')} characters`;
     }
 
     function showPage(name) {
@@ -160,6 +168,8 @@
                 message.textContent = 'Successful, creation process started, please check later your Archivero.'; message.classList.add('success');
             } catch { message.textContent = 'Unable to create the archive. Please try again.'; }
         });
+        $('#archive-title').addEventListener('input', updateCharacterCounts);
+        $('#archive-content').addEventListener('input', updateCharacterCounts);
         $('#logout-button').addEventListener('click', () => { auth.clear(); closeMobileMenu(); setLoggedIn(null); });
         document.querySelectorAll('[data-page-link]').forEach((link) => link.addEventListener('click', (event) => { event.preventDefault(); const page = link.dataset.pageLink; history.replaceState(null, '', `#${page}`); showPage(page); }));
         $('#sidebar-toggle').addEventListener('click', toggleSidebar);

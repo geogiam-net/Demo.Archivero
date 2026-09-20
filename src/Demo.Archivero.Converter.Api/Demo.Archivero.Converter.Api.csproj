@@ -3,7 +3,7 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-	<UserSecretsId>54a7bef2-ca0f-4820-a730-c6542917e9a5</UserSecretsId>
+     <UserSecretsId>54a2727d-a3da-44fc-a053-8e61fc56438e</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="wwwroot\login\**" />
@@ -24,10 +24,10 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="10.2.3" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Demo.Archivero.Application\Demo.Archivero.Application.csproj" />
-    <ProjectReference Include="..\Demo.Archivero.Domain\Demo.Archivero.Domain.csproj" />
-    <ProjectReference Include="..\Demo.Archivero.Infrastructure.DataClients\Demo.Archivero.Infrastructure.DataClients.csproj" />
-    <ProjectReference Include="..\Demo.Archivero.Infrastructure.SqlRepository\Demo.Archivero.Infrastructure.SqlRepository.csproj" />
-    <ProjectReference Include="..\Demo.Archivero.UnitTests\Demo.Archivero.UnitTests.csproj" />
+    <ProjectReference Include="..\Demo.Archivero.Backend.Application\Demo.Archivero.Backend.Application.csproj" />
+    <ProjectReference Include="..\Demo.Archivero.Backend.Domain\Demo.Archivero.Backend.Domain.csproj" />
+    <ProjectReference Include="..\Demo.Archivero.Backend.Infrastructure.AzureBlob\Demo.Archivero.Backend.Infrastructure.AzureBlob.csproj" />
+    <ProjectReference Include="..\Demo.Archivero.Backend.Infrastructure.OpenXml\Demo.Archivero.Backend.Infrastructure.OpenXml.csproj" />
+    <ProjectReference Include="..\Demo.Archivero.Backend.Infrastructure.SqlRepository\Demo.Archivero.Backend.Infrastructure.SqlRepository.csproj" />
   </ItemGroup>
 </Project>

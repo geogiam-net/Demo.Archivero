@@ -9,6 +9,10 @@
       {
         "Path": "src\\Demo.Archivero.Frontend.Spa\\Demo.Archivero.Frontend.Spa.csproj",
         "Action": "Start"
+      },
+      {
+        "Path": "src\\Demo.Archivero.Converter.Api\\Demo.Archivero.Converter.Api.csproj",
+        "Action": "Start"
       }
     ]
   }

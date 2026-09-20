@@ -6,6 +6,8 @@ namespace Demo.Archivero.Application.Interfaces.Repositories;
 
 public interface IFileRepository
 {
+    Task<FileEntity?> GetFileAsync(int id, CancellationToken ct);
+
     Task<List<FileEntity>> GetFilesAsync(int owner, CancellationToken ct);
 
     Task<ResultDto<int>> CreateFileAsync(FileEntity file, AppUser user, CancellationToken ct);

@@ -11,6 +11,11 @@ namespace Demo.Archivero.Infrastructure.SqlRepository.Repositories;
 
 public sealed class FileRepository(DbContextArchivero db, IDateTimeProvider dateTimeProvider) : IFileRepository
 {
+    public async Task<FileEntity?> GetFileAsync(int id, CancellationToken ct)
+    {
+        return await db.Files.FirstOrDefaultAsync(x => x.Id == id, ct);
+    }
+
     public async Task<List<FileEntity>> GetFilesAsync(int owner, CancellationToken ct)
     {
         return await db.Files.AsNoTracking().Where(x => x.OwnerId == owner && x.Status == FileStatus.Available).ToListAsync(ct);

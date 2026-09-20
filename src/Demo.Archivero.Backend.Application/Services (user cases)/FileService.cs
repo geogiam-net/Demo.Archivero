@@ -1,8 +1,8 @@
 ﻿using Demo.Archivero.Application.Dtos;
 using Demo.Archivero.Application.Dtos.File;
-using Demo.Archivero.Application.Dtos.User;
 using Demo.Archivero.Application.Interfaces;
 using Demo.Archivero.Application.Interfaces.Application;
+using Demo.Archivero.Application.Interfaces.Infrastructure;
 using Demo.Archivero.Application.Interfaces.Repositories;
 using Microsoft.Extensions.Logging;
 using FileEntity = Demo.Archivero.Domain.Entities.File;
@@ -13,7 +13,9 @@ public class FileService(
     IFileRepository fileRepository,
     IUserRepository userRepository,
     ILogger<FileService> logger,
-    IDateTimeProvider dateTimeProvider
+    IDateTimeProvider dateTimeProvider,
+    IOpenXmlWordService openXmlWordService,
+    IBlobService blobService
     ) : IFileService
 {
     public async Task<ResultDto<bool>> CreateFileAsync(string title, string content, string username, CancellationToken ct)
@@ -28,18 +30,29 @@ public class FileService(
         // Demo.Archivero.Backend.Api only sends data to queue for creation by another server
         logger.LogInformation("File set for creation by user: {Username} at {CreatedAt}", username, dateTimeProvider.UtcNow);
 
+        // ########################################################################################
+
         // second server creates file, blob, then saves entry into database
-        FileEntity newFile = new FileEntity
+        using (var stream = openXmlWordService.CreateDocument(title, content)) 
         {
-            Title = title,
-            BlobId = Guid.NewGuid().ToString(),
-            OwnerId = user.Id,
-            Status = Domain.Enums.FileStatus.Available
-        };
+            var blobId = await blobService.UploadToBlobAsync(user.Id, stream, ct);
+            if (blobId is null) 
+            {
+                return new ResultDto<bool>(false, Domain.Enums.Error.InternalServerError, new[] { "Failed to upload blob." });
+            }
 
-        var id = await fileRepository.CreateFileAsync(newFile, user, ct);
+            FileEntity newFile = new FileEntity
+            {
+                Title = title,
+                BlobId = blobId,
+                OwnerId = user.Id,
+                Status = Domain.Enums.FileStatus.Available
+            };
 
-        logger.LogInformation("File created: {FileId} by user: {Username} at {CreatedAt}", id, username, dateTimeProvider.UtcNow);
+            var id = await fileRepository.CreateFileAsync(newFile, user, ct);
+
+            logger.LogInformation("File created: {FileId} by user: {Username} at {CreatedAt}", id, username, dateTimeProvider.UtcNow);
+        }
 
         return new ResultDto<bool>(true);
     }
@@ -55,10 +68,12 @@ public class FileService(
 
         var files = await fileRepository.GetFilesAsync(user.Id, ct);
 
+        var urls = await blobService.GetTemporaryUrlsAsync(user.Id, files.Select(f => f.BlobId).ToList(), TimeSpan.FromMinutes(15), ct);
+
         var fileDtos = files.Select(f => new FileDto(
             f.Title,
             f.CreatedAtUtc,
-            ""
+            urls.TryGetValue(f.BlobId, out var url) ? url : ""
         )).ToList();
 
         return new ResultDto<IReadOnlyList<FileDto>>(fileDtos);
@@ -81,7 +96,23 @@ public class FileService(
             logger.LogInformation("File marked for deletion: {FileId} by user: {Username} at {DeletedAt}", fileId, username, dateTimeProvider.UtcNow);
         }
 
+        // ########################################################################################
+
         // second server deletes blob, then file entry in database
+
+        var file = await fileRepository.GetFileAsync(fileId, ct);
+
+        if (file is null)
+        {
+            return new ResultDto<bool>(
+                false,
+                Domain.Enums.Error.NotFound,
+                new List<string> { "File not found." }
+            );
+        }
+
+        await blobService.DeleteBlobAsync(user.Id, file.BlobId, ct);
+
         await fileRepository.DeleteFileAsync(fileId, ct);
 
         if (result.Result)

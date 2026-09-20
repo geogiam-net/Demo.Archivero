@@ -82,6 +82,13 @@ public sealed class DbContextArchivero(DbContextOptions<DbContextArchivero> opti
                 .HasMaxLength(256)
                 .IsRequired();
 
+            e.HasIndex(x => x.OwnerId);
+
+            e.HasOne<AppUser>()
+                .WithMany()
+                .HasForeignKey(x => x.OwnerId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             ConfigureAudit(e);
         });
     }

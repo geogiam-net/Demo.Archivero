@@ -10,11 +10,13 @@ using Demo.Archivero.Application.Interfaces.Infrastructure;
 using Demo.Archivero.Application.Dtos.Auth;
 using Demo.Archivero.Application.Dtos;
 using Demo.Archivero.Domain.Enums;
+using Demo.Archivero.Application.Interfaces;
 
 namespace Demo.Archivero.Infrastructure.SqlRepository.Services;
 
 public sealed class AuthService(
     Data.DbContextArchivero db,
+    IDateTimeProvider dateTimeProvider,
     IConfiguration configuration) : IAuthService
 {
     public async Task<ResultDto<LoginResponseDto?>> LoginAsync(
@@ -37,14 +39,14 @@ public sealed class AuthService(
                 return new ResultDto<LoginResponseDto?>(null, Error.NotAuthorized, errorMessages);
             }
 
-            user.LastLoginAtUtc = DateTime.UtcNow;
+            user.LastLoginAtUtc = dateTimeProvider.UtcNow;
             await db.SaveChangesAsync(cancellationToken);
 
             var settings = configuration.GetSection(JwtSettings.ArchiveroJwtConfiguration).Get<JwtSettings>();
 
             var expirationMinutes = settings!.ExpirationMinutes ?? 480;
 
-            var expiresAtUtc = DateTime.UtcNow.AddMinutes(expirationMinutes);
+            var expiresAtUtc = dateTimeProvider.UtcNow.AddMinutes(expirationMinutes);
 
             var permissions = AppPermissionCatalog.GetPermissions(user.Role);
             var claims = new List<Claim>

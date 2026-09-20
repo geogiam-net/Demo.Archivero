@@ -5,6 +5,7 @@ using Demo.Archivero.Application.Interfaces.Application;
 using Demo.Archivero.Application.Interfaces.Infrastructure;
 using Demo.Archivero.Application.Interfaces.Repositories;
 using Microsoft.Extensions.Logging;
+using System.Net;
 using FileEntity = Demo.Archivero.Domain.Entities.File;
 
 namespace Demo.Archivero.Application.Services;
@@ -20,6 +21,23 @@ public class FileService(
 {
     public async Task<ResultDto<bool>> CreateFileAsync(string title, string content, string username, CancellationToken ct)
     {
+        if (string.IsNullOrWhiteSpace(title))
+        {
+            return new ResultDto<bool>(
+                false,
+                Domain.Enums.Error.ValidationError,
+                new[] { "File title is required." });
+        }
+
+        title = title.Trim();
+        if (title.Length > 512)
+        {
+            return new ResultDto<bool>(
+                false,
+                Domain.Enums.Error.ValidationError,
+                new[] { "File title cannot exceed 512 characters." });
+        }
+
         var user = await userRepository.GetUserAsync(username, ct);
 
         if (user is null)
@@ -41,6 +59,7 @@ public class FileService(
                 return new ResultDto<bool>(false, Domain.Enums.Error.InternalServerError, new[] { "Failed to upload blob." });
             }
 
+            // EF Core persists this value as a parameter; do not SQL-escape user text.
             FileEntity newFile = new FileEntity
             {
                 Title = title,
@@ -71,7 +90,8 @@ public class FileService(
         var urls = await blobService.GetTemporaryUrlsAsync(user.Id, files.Select(f => f.BlobId).ToList(), TimeSpan.FromMinutes(15), ct);
 
         var fileDtos = files.Select(f => new FileDto(
-            f.Title,
+            f.Id,
+            WebUtility.HtmlEncode(f.Title),
             f.CreatedAtUtc,
             urls.TryGetValue(f.BlobId, out var url) ? url : ""
         )).ToList();

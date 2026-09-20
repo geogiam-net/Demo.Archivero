@@ -1,6 +1,7 @@
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Azure.Storage.Sas;
+using Demo.Archivero.Application.Interfaces;
 using Demo.Archivero.Application.Interfaces.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -9,6 +10,7 @@ namespace Demo.Archivero.Backend.Infrastructure.AzureBlob;
 
 public sealed class BlobService(
     ILogger<BlobService> logger,
+    IDateTimeProvider dateTimeProvider,
     IConfiguration configuration) : IBlobService
 {
     public async Task<string?> UploadToBlobAsync(
@@ -26,8 +28,8 @@ public sealed class BlobService(
 
         try
         {
-            var containerClient = await GetContainerClientAsync(userId, ct);
-            await containerClient.GetBlobClient(blobId)
+            var containerClient = await GetContainerClientAsync(ct);
+            await GetUserBlobClient(containerClient, userId, blobId)
                 .UploadAsync(content, overwrite: true, cancellationToken: ct);
 
             logger.LogInformation("Blob {BlobName} uploaded for user {UserId}.", blobId, userId);
@@ -55,10 +57,10 @@ public sealed class BlobService(
 
         try
         {
-            var containerClient = await GetContainerClientAsync(userId, ct);
+            var containerClient = await GetContainerClientAsync(ct);
             foreach (var blobName in blobIds.Where(static name => !string.IsNullOrWhiteSpace(name)).Distinct(StringComparer.Ordinal))
             {
-                var blobClient = containerClient.GetBlobClient(blobName);
+                var blobClient = GetUserBlobClient(containerClient, userId, blobName);
                 if (!blobClient.CanGenerateSasUri)
                 {
                     logger.LogError("Blob client cannot generate SAS URLs for user {UserId}.", userId);
@@ -68,9 +70,9 @@ public sealed class BlobService(
                 var sas = new BlobSasBuilder
                 {
                     BlobContainerName = containerClient.Name,
-                    BlobName = blobName,
+                    BlobName = blobClient.Name,
                     Resource = "b",
-                    ExpiresOn = DateTimeOffset.UtcNow.Add(expiresIn)
+                    ExpiresOn = dateTimeProvider.UtcNowOffset.Add(expiresIn)
                 };
                 sas.SetPermissions(BlobSasPermissions.Read);
                 urls[blobName] = blobClient.GenerateSasUri(sas).ToString();
@@ -98,8 +100,8 @@ public sealed class BlobService(
 
         try
         {
-            var containerClient = await GetContainerClientAsync(userId, ct);
-            var response = await containerClient.GetBlobClient(blobId).DeleteIfExistsAsync(
+            var containerClient = await GetContainerClientAsync(ct);
+            var response = await GetUserBlobClient(containerClient, userId, blobId).DeleteIfExistsAsync(
                 DeleteSnapshotsOption.IncludeSnapshots,
                 cancellationToken: ct);
 
@@ -117,7 +119,7 @@ public sealed class BlobService(
         }
     }
 
-    private async Task<BlobContainerClient> GetContainerClientAsync(int userId, CancellationToken cancellationToken)
+    private async Task<BlobContainerClient> GetContainerClientAsync(CancellationToken cancellationToken)
     {
         var settings = configuration
             .GetSection(BlobServiceSettings.BlobServiceConfiguration)
@@ -125,10 +127,15 @@ public sealed class BlobService(
             ?? throw new InvalidOperationException($"Missing {BlobServiceSettings.BlobServiceConfiguration} configuration.");
 
         var serviceClient = new BlobServiceClient(settings.ConnectionString);
-        var containerName = $"{settings.ContainerName.ToLowerInvariant()}-{userId}";
+
+        var containerName = settings.ContainerName.ToLowerInvariant();
         var containerClient = serviceClient.GetBlobContainerClient(containerName);
 
         await containerClient.CreateIfNotExistsAsync(cancellationToken: cancellationToken);
         return containerClient;
     }
+
+    // Azure Blob Storage supports a single container level. Prefixing blob names models a per-user folder.
+    private static BlobClient GetUserBlobClient(BlobContainerClient containerClient, int userId, string blobId)
+        => containerClient.GetBlobClient($"{userId}/{blobId}");
 }

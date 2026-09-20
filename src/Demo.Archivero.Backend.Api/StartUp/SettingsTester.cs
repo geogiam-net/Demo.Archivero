@@ -1,5 +1,6 @@
 using Demo.Archivero.Api.Startup;
 using Demo.Archivero.Application.Security;
+using Demo.Archivero.Backend.Infrastructure.AzureBlob;
 
 namespace Demo.Archivero.Api.StartUp;
 
@@ -14,6 +15,7 @@ internal static class SettingsTester
         RequireValue(configuration, "ArchiveroAuth:AdminPassword");
 
         TestArchiveroJwtConfiguration(configuration);
+        TestArchiveroBlobConfiguration(configuration);
     }
 
     private static void TestArchiveroJwtConfiguration(IConfiguration configuration)
@@ -37,6 +39,25 @@ internal static class SettingsTester
         if (string.IsNullOrWhiteSpace(settings.Audience))
         {
             throw new InvalidOperationException("ArchiveroJwt settings are missing Audience.");
+        }
+    }
+
+    private static void TestArchiveroBlobConfiguration(IConfiguration configuration)
+    {
+        var settings = configuration.GetSection(BlobServiceSettings.BlobServiceConfiguration).Get<BlobServiceSettings>();
+        if (settings == null)
+        {
+            throw new InvalidOperationException($"BlobService settings with name '{BlobServiceSettings.BlobServiceConfiguration}' not found");
+        }
+
+        if (string.IsNullOrWhiteSpace(settings.ConnectionString))
+        {
+            throw new InvalidOperationException("BlobService settings are missing ConnectionString.");
+        }
+
+        if (string.IsNullOrWhiteSpace(settings.ContainerName))
+        {
+            throw new InvalidOperationException("BlobService settings are missing ContainerName.");
         }
     }
 

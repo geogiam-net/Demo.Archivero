@@ -32,21 +32,14 @@ public static class Configuration
         }
         catch (Exception ex)
         {
-            app.Logger.LogCritical(ex, "WPS startup failed during database migration or authentication seed.");
+            app.Logger.LogCritical(ex, "Archivero startup failed during database migration or authentication seed.");
             throw;
         }
     }
 
     public static void AddAuthorization(this IServiceCollection services, IConfiguration configuration)
     {
-        var jwtSigningKey = configuration["ArchiveroJwtConfiguration:SigningKey"]
-    ?? throw new InvalidOperationException("ArchiveroJwtConfiguration:SigningKey is not configured.");
-
-        var jwtIssuer = configuration["ArchiveroJwtConfiguration:Issuer"]
-            ?? throw new InvalidOperationException("ArchiveroJwtConfiguration:Issuer is not configured.");
-
-        var jwtAudience = configuration["ArchiveroJwtConfiguration:Audience"]
-            ?? throw new InvalidOperationException("ArchiveroJwtConfiguration:Audience is not configured.");
+        var settings = configuration.GetSection(JwtSettings.ArchiveroJwtConfiguration).Get<JwtSettings>();
 
         services
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -58,17 +51,15 @@ public static class Configuration
                     ValidateAudience = true,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer = jwtIssuer,
-                    ValidAudience = jwtAudience,
-                    IssuerSigningKey = new SymmetricSecurityKey(
-                        Encoding.UTF8.GetBytes(jwtSigningKey)),
+                    ValidIssuer = settings!.Issuer,
+                    ValidAudience = settings.Audience,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(settings.SigningKey)),
                     ClockSkew = TimeSpan.FromMinutes(2)
                 };
             });
 
         services.AddAuthorization(options =>
         {
-
             options.AddPolicy("AnyModuleView", policy =>
                 policy.RequireAnyPermission(
                     AppPermissions.ArchiveroView));

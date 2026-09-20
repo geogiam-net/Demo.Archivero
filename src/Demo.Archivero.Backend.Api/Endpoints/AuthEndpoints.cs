@@ -26,7 +26,7 @@ public static class AuthEndpoints
 
         return ResultDtoResultMapper.ToHttpResult(
             result,
-            employee => TypedResults.Ok(result));
+            employee => TypedResults.Ok(result.Result));
     }
 
     private static IResult GetMe(ClaimsPrincipal user)

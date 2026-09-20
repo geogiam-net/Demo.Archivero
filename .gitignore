@@ -22,3 +22,5 @@
 /src/Demo.Archivero.Backend.Infrastructure.AzureBlob/bin/Debug/net10.0
 /src/Demo.Archivero.Backend.Infrastructure.OpenXml/bin/Debug/net10.0
 /src/Demo.Archivero.Converter.Api/bin/Debug/net10.0
+/src/Demo.Archivero.Converter.Client/bin/Debug/net10.0
+/src/Demo.Archivero.Converter.Client/obj

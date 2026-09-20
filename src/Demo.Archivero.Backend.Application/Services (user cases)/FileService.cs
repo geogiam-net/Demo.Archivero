@@ -5,6 +5,8 @@ using Demo.Archivero.Application.Interfaces.Application;
 using Demo.Archivero.Application.Interfaces.Infrastructure;
 using Demo.Archivero.Application.Interfaces.Repositories;
 using Demo.Archivero.Backend.Application.Settings;
+using Demo.Archivero.Converter.Client;
+using Demo.Archivero.Converter.Client.Contracts;
 using Microsoft.Extensions.Logging;
 using System.Net;
 
@@ -15,7 +17,8 @@ public class FileService(
     IUserRepository userRepository,
     ILogger<FileService> logger,
     IDateTimeProvider dateTimeProvider,
-    IBlobService blobService
+    IBlobService blobService,
+    IConverterApiClient converterApiClient
     ) : IFileService
 {
     public async Task<ResultDto<bool>> CreateFileAsync(string title, string content, string username, CancellationToken ct)
@@ -52,8 +55,12 @@ public class FileService(
             return new ResultDto<bool>(false, Domain.Enums.Error.NotFound, new[] { "User not found." });
         }
 
-        // Demo.Archivero.Backend.Api only sends data to queue for creation by another server
         logger.LogInformation("File set for creation by user: {Username} at {CreatedAt}", username, dateTimeProvider.UtcNow);
+
+        // This will be an Azure Queue call later
+        await converterApiClient.CreateWordFileAsync(
+            new CreateWordFileRequest(username, title, content ?? ""),
+            ct);
 
         return new ResultDto<bool>(true);
     }
@@ -90,7 +97,6 @@ public class FileService(
             return new ResultDto<bool>(false, Domain.Enums.Error.NotFound, new[] { "User not found." });
         }
 
-        // Demo.Archivero.Backend.Api only set it to obsolete, then it is sent to queue for deletion by another server
         var result =  await fileRepository.SetFileAsObsoleteAsync(fileId, user, ct);
 
         if (result.Result)
@@ -98,7 +104,9 @@ public class FileService(
             logger.LogInformation("File marked for deletion: {FileId} by user: {Username} at {DeletedAt}", fileId, username, dateTimeProvider.UtcNow);
         }
 
+        // This will be an Azure Queue call later
+        await converterApiClient.DeleteWordFileAsync(fileId, username, ct);
+
         return result;
     }
-
 }

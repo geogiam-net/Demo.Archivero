@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Demo.Archivero.Backend.Domain\Demo.Archivero.Backend.Domain.csproj" />
+    <ProjectReference Include="..\Demo.Archivero.Converter.Client\Demo.Archivero.Converter.Client.csproj" />
   </ItemGroup>
 
 </Project>

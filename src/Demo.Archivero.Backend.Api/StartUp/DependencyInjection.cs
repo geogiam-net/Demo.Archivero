@@ -6,6 +6,7 @@ using Demo.Archivero.Application.Interfaces.Repositories;
 using Demo.Archivero.Application.Services;
 using Demo.Archivero.Backend.Infrastructure.AzureBlob;
 using Demo.Archivero.Backend.Infrastructure.OpenXml;
+using Demo.Archivero.Converter.Client;
 using Demo.Archivero.Infrastructure.SqlRepository.Data;
 using Demo.Archivero.Infrastructure.SqlRepository.Repositories;
 using Demo.Archivero.Infrastructure.SqlRepository.Services;
@@ -47,6 +48,7 @@ public static class DependencyInjection
 
         services.AddScoped<IBlobService, BlobService>();
         services.AddScoped<IDateTimeProvider, DateTimeProvider>();
+        services.AddScoped<IConverterApiClient, ConverterApiClient>();
 
         return services;
     }

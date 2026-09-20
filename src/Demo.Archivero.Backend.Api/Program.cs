@@ -2,6 +2,7 @@
 using Demo.Archivero.Api.Endpoints;
 using Demo.Archivero.Api.Startup;
 using Demo.Archivero.Api.StartUp;
+using Demo.Archivero.Converter.Client;
 using Microsoft.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -42,6 +43,8 @@ builder.Services.AddAuthorization(builder.Configuration);
 builder.Services.AddDatabase(builder.Configuration);
 builder.Services.AddRepositories();
 builder.Services.AddServices();
+// builder.Services.AddHttpClient();
+builder.Services.AddConverterApiClient(new Uri("https://localhost:50953/"));
 
 #if DEBUG
 builder.Services.AddProblemDetails();

@@ -5,6 +5,7 @@
   <Project Path="src/Demo.Archivero.Backend.Infrastructure.SqlRepository./Demo.Archivero.Backend.Infrastructure.SqlRepository.csproj" />
   <Project Path="src/Demo.Archivero.Backend.UnitTests/Demo.Archivero.Backend.UnitTests.csproj" />
   <Project Path="src/Demo.Archivero.Converter.Api/Demo.Archivero.Converter.Api.csproj" />
+  <Project Path="src/Demo.Archivero.Converter.Client/Demo.Archivero.Converter.Client.csproj" />
   <Project Path="src/Demo.Archivero.Frontend.Spa/Demo.Archivero.Frontend.Spa.csproj" />
   <Project Path="src/Demo.Archivero.Backend.Infrastructure.AzureBlob/Demo.Archivero.Backend.Infrastructure.AzureBlob.csproj" />
   <Project Path="src/Demo.Archivero.Backend.Infrastructure.OpenXml/Demo.Archivero.Backend.Infrastructure.OpenXml.csproj" />

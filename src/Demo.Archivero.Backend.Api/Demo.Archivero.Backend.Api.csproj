@@ -23,5 +23,6 @@
     <ProjectReference Include="..\Demo.Archivero.Backend.Infrastructure.AzureBlob\Demo.Archivero.Backend.Infrastructure.AzureBlob.csproj" />
     <ProjectReference Include="..\Demo.Archivero.Backend.Infrastructure.OpenXml\Demo.Archivero.Backend.Infrastructure.OpenXml.csproj" />
     <ProjectReference Include="..\Demo.Archivero.Backend.Infrastructure.SqlRepository\Demo.Archivero.Backend.Infrastructure.SqlRepository.csproj" />
+    <ProjectReference Include="..\Demo.Archivero.Converter.Client\Demo.Archivero.Converter.Client.csproj" />
   </ItemGroup>
 </Project>

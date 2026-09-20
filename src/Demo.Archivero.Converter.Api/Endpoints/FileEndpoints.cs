@@ -8,8 +8,8 @@ public static class FileEndpoints
 {
     public static IEndpointRouteBuilder MapFileEndpoints(this IEndpointRouteBuilder app)
     {
-        app.MapPost(Routes.CreateWordFile, CreateFile).RequireAuthorization();
-        app.MapDelete(Routes.DeleteWordFile, DeleteFile).RequireAuthorization();
+        app.MapPost(Routes.CreateWordFile, CreateFile);
+        app.MapDelete(Routes.DeleteWordFile, DeleteFile);
 
         return app;
     }

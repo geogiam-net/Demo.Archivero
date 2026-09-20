@@ -1,5 +1,6 @@
 ﻿using Demo.Archivero.Application.Dtos;
 using Demo.Archivero.Application.Dtos.File;
+using Demo.Archivero.Application.Dtos.User;
 using Demo.Archivero.Application.Interfaces;
 using Demo.Archivero.Application.Interfaces.Application;
 using Demo.Archivero.Application.Interfaces.Repositories;
@@ -36,7 +37,7 @@ public class FileService(
             Status = Domain.Enums.FileStatus.Available
         };
 
-        var id = await fileRepository.CreateFileAsync(newFile, ct);
+        var id = await fileRepository.CreateFileAsync(newFile, user, ct);
 
         logger.LogInformation("File created: {FileId} by user: {Username} at {CreatedAt}", id, username, dateTimeProvider.UtcNow);
 
@@ -73,7 +74,7 @@ public class FileService(
         }
 
         // Demo.Archivero.Backend.Api only set it to obsolete, then it is sent to queue for deletion by another server
-        var result =  await fileRepository.SetFileAsObsoleteAsync(fileId, ct);
+        var result =  await fileRepository.SetFileAsObsoleteAsync(fileId, user, ct);
 
         if (result.Result)
         {

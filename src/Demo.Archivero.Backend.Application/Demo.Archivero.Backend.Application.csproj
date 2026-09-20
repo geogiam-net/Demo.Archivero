@@ -11,8 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Interfaces\Application\" />
-    <Folder Include="Services %28user cases%29\" />
     <Folder Include="Settings\" />
   </ItemGroup>
 

@@ -1,6 +1,6 @@
 ﻿namespace Demo.Archivero.Domain.Enums;
 
-public enum FileState : short
+public enum FileStatus : short
 {
     None = 0,
     Available = 1,

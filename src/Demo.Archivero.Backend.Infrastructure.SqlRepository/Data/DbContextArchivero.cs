@@ -73,9 +73,9 @@ public sealed class DbContextArchivero(DbContextOptions<DbContextArchivero> opti
                 .HasMaxLength(512)
                 .IsRequired();
 
-            e.Property(x => x.State)
+            e.Property(x => x.Status)
                 .HasConversion<short>()
-                .HasDefaultValue(FileState.None)
+                .HasDefaultValue(FileStatus.None)
                 .IsRequired();
 
             e.Property(x => x.BlobId)

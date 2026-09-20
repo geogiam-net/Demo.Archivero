@@ -5,9 +5,11 @@ namespace Demo.Archivero.Domain.Entities;
 
 public sealed class File: EntityBase
 {
+    public int OwnerId { get; set; }
+
     public string Title { get; set; } = "";
 
-    public FileState State { get; set; } = FileState.None;
+    public FileStatus Status { get; set; } = FileStatus.None;
 
     public string BlobId { get; set; } = "";
 }

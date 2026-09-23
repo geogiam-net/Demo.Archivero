@@ -9,6 +9,7 @@ using Demo.Archivero.Converter.Client;
 using Demo.Archivero.Converter.Client.Contracts;
 using Microsoft.Extensions.Logging;
 using System.Net;
+using FileEntity = Demo.Archivero.Domain.Entities.File;
 
 namespace Demo.Archivero.Application.Services;
 
@@ -21,7 +22,7 @@ public class FileService(
     IConverterApiClient converterApiClient
     ) : IFileService
 {
-    public async Task<ResultDto<bool>> CreateFileAsync(string title, string content, string username, CancellationToken ct)
+    public async Task<ResultDto<bool>> QueueFileAsync(string title, string content, string username, CancellationToken ct)
     {
         if (string.IsNullOrWhiteSpace(title))
         {
@@ -57,9 +58,22 @@ public class FileService(
 
         logger.LogInformation("File set for creation by user: {Username} at {CreatedAt}", username, dateTimeProvider.UtcNow);
 
+
+        // EF Core persists this value as a parameter; do not SQL-escape user text.
+        FileEntity newFile = new FileEntity
+        {
+            Title = title,
+            Content = content ?? "",
+            BlobId = string.Empty,
+            OwnerId = user.Id,
+            Status = Domain.Enums.FileStatus.InQueue
+        };
+
+        var idResult = await fileRepository.SetInQueueFileAsync(newFile, user, ct);
+
         // This will be an Azure Queue call later
         await converterApiClient.CreateWordFileAsync(
-            new CreateWordFileRequest(username, title, content ?? ""),
+            new CreateWordFileRequest(idResult.Result, username),
             ct);
 
         return new ResultDto<bool>(true);

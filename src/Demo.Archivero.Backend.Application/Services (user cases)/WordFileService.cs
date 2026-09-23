@@ -18,34 +18,8 @@ public class WordFileService(
     IBlobService blobService
     ) : IWordFileService
 {
-    public async Task<ResultDto<bool>> CreateWordFileAsync(string title, string content, string username, CancellationToken ct)
+    public async Task<ResultDto<bool>> CreateWordFileAsync(int fileId, string username, CancellationToken ct)
     {
-        if (string.IsNullOrWhiteSpace(title))
-        {
-            return new ResultDto<bool>(
-                false,
-                Domain.Enums.Error.ValidationError,
-                new[] { "File title is required." });
-        }
-
-        title = title.Trim();
-        if (title.Length > EntitiesSettings.FileTitleMaxLength)
-        {
-            return new ResultDto<bool>(
-                false,
-                Domain.Enums.Error.ValidationError,
-                new[] { $"File title cannot exceed {EntitiesSettings.FileTitleMaxLength} characters." });
-        }
-
-        content = content.Trim();
-        if (content.Length > EntitiesSettings.FileContentMaxLength)
-        {
-            return new ResultDto<bool>(
-                false,
-                Domain.Enums.Error.ValidationError,
-                new[] { $"File content cannot exceed {EntitiesSettings.FileContentMaxLength} characters." });
-        }
-
         var user = await userRepository.GetUserAsync(username, ct);
 
         if (user is null)
@@ -53,7 +27,14 @@ public class WordFileService(
             return new ResultDto<bool>(false, Domain.Enums.Error.NotFound, new[] { "User not found." });
         }
 
-        using (var stream = openXmlWordService.CreateDocument(title, content)) 
+        var file = await fileRepository.GetFileAsync(fileId, ct);
+
+        if (file is null)
+        {
+            return new ResultDto<bool>(false, Domain.Enums.Error.NotFound, new[] { "File not found." });
+        }
+
+        using (var stream = openXmlWordService.CreateDocument(file.Title, file.Content)) 
         {
             var blobId = await blobService.UploadToBlobAsync(user.Id, stream, ct);
             if (blobId is null) 
@@ -61,19 +42,9 @@ public class WordFileService(
                 return new ResultDto<bool>(false, Domain.Enums.Error.InternalServerError, new[] { "Failed to upload blob." });
             }
 
-            // EF Core persists this value as a parameter; do not SQL-escape user text.
-            FileEntity newFile = new FileEntity
-            {
-                Title = title,
-                Content = content,
-                BlobId = blobId,
-                OwnerId = user.Id,
-                Status = Domain.Enums.FileStatus.Available
-            };
+            await fileRepository.ReadyFileAsync(file, user, ct);
 
-            var id = await fileRepository.CreateFileAsync(newFile, user, ct);
-
-            logger.LogInformation("File created: {FileId} by user: {Username} at {CreatedAt}", id, username, dateTimeProvider.UtcNow);
+            logger.LogInformation("Word file created: {FileId} by user: {Username} at {CreatedAt}", fileId, username, dateTimeProvider.UtcNow);
         }
 
         return new ResultDto<bool>(true);

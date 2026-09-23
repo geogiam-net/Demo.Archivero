@@ -10,7 +10,9 @@ public interface IFileRepository
 
     Task<List<FileEntity>> GetFilesAsync(int owner, CancellationToken ct);
 
-    Task<ResultDto<int>> CreateFileAsync(FileEntity file, AppUser user, CancellationToken ct);
+    Task<ResultDto<int>> SetInQueueFileAsync(FileEntity file, AppUser user, CancellationToken ct);
+
+    Task<ResultDto<bool>> ReadyFileAsync(FileEntity file, AppUser user, CancellationToken ct);
 
     Task<ResultDto<bool>> SetFileAsObsoleteAsync(int id, AppUser user, CancellationToken ct);
 

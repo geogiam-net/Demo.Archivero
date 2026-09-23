@@ -5,7 +5,7 @@ namespace Demo.Archivero.Application.Interfaces.Application;
 
 public interface IFileService
 {
-    Task<ResultDto<bool>> CreateFileAsync(string title, string content, string username, CancellationToken ct);
+    Task<ResultDto<bool>> QueueFileAsync(string title, string content, string username, CancellationToken ct);
 
     Task<ResultDto<IReadOnlyList<FileDto>>> GetFilesAsync(string username, CancellationToken ct);
 

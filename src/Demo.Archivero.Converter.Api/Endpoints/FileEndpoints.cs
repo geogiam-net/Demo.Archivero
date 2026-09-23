@@ -16,7 +16,7 @@ public static class FileEndpoints
 
     private static async Task<IResult> CreateFile(CreateWordFileRequestDto request, ClaimsPrincipal user, IWordFileService fileService, CancellationToken ct)
     {
-        var result = await fileService.CreateWordFileAsync(request.Title, request.Content, request.username, ct);
+        var result = await fileService.CreateWordFileAsync(request.FileId, request.Username, ct);
 
         return ResultDtoResultMapper.ToHttpResult(
             result,

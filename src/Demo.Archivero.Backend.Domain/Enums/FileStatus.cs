@@ -3,6 +3,7 @@
 public enum FileStatus : short
 {
     None = 0,
-    Available = 1,
-    Obsolete = 2
+    InQueue = 1,
+    Ready = 2,
+    Obsolete = 3
 }

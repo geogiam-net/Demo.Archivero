@@ -18,12 +18,12 @@ public sealed class FileRepository(DbContextArchivero db, IDateTimeProvider date
 
     public async Task<List<FileEntity>> GetFilesAsync(int owner, CancellationToken ct)
     {
-        return await db.Files.AsNoTracking().Where(x => x.OwnerId == owner && x.Status == FileStatus.Available).ToListAsync(ct);
+        return await db.Files.AsNoTracking().Where(x => x.OwnerId == owner && x.Status == FileStatus.Ready).ToListAsync(ct);
     }
 
-    public async Task<ResultDto<int>> CreateFileAsync(FileEntity file, AppUser user, CancellationToken ct)
+    public async Task<ResultDto<int>> SetInQueueFileAsync(FileEntity file, AppUser user, CancellationToken ct)
     {
-        file.Status = FileStatus.Available;
+        file.Status = FileStatus.InQueue;
         file.OwnerId = user.Id;
         file.CreatedAtUtc = dateTimeProvider.UtcNow;
         file.CreatedBy = user.Username;
@@ -33,6 +33,18 @@ public sealed class FileRepository(DbContextArchivero db, IDateTimeProvider date
         await db.SaveChangesAsync(ct);
 
         return new ResultDto<int>(file.Id);
+    }
+
+    public async Task<ResultDto<bool>> ReadyFileAsync(FileEntity file, AppUser user, CancellationToken ct)
+    {
+        file.Status = FileStatus.Ready;
+        file.UpdatedAtUtc = dateTimeProvider.UtcNow;
+
+        db.Files.Update(file);
+
+        await db.SaveChangesAsync(ct);
+
+        return new ResultDto<bool>(true);
     }
 
     public async Task<ResultDto<bool>> SetFileAsObsoleteAsync(int id, AppUser user, CancellationToken ct)

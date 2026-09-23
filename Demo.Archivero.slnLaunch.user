@@ -7,11 +7,11 @@
         "Action": "Start"
       },
       {
-        "Path": "src\\Demo.Archivero.Frontend.Spa\\Demo.Archivero.Frontend.Spa.csproj",
+        "Path": "src\\Demo.Archivero.Converter.Worker\\Demo.Archivero.Converter.Worker.csproj",
         "Action": "Start"
       },
       {
-        "Path": "src\\Demo.Archivero.Converter.Worker\\Demo.Archivero.Converter.Worker.csproj",
+        "Path": "src\\Demo.Archivero.Frontend.Spa\\Demo.Archivero.Frontend.Spa.csproj",
         "Action": "Start"
       }
     ]

@@ -1,20 +1,32 @@
-﻿using Demo.Archivero.Api.Services;
+using Demo.Archivero.Converter.Worker.Services;
 using Demo.Archivero.Application.Interfaces;
 using Demo.Archivero.Application.Interfaces.Application;
 using Demo.Archivero.Application.Interfaces.Infrastructure;
 using Demo.Archivero.Application.Interfaces.Repositories;
 using Demo.Archivero.Application.Services;
 using Demo.Archivero.Infrastructure.AzureBlob;
+using Demo.Archivero.Infrastructure.OpenXml;
 using Demo.Archivero.Infrastructure.SqlRepository.Data;
 using Demo.Archivero.Infrastructure.SqlRepository.Repositories;
-using Demo.Archivero.Infrastructure.SqlRepository.Services;
 using Microsoft.EntityFrameworkCore;
+using Demo.Archivero.Infrastructure.ServiceBus;
+using Demo.Archivero.Converter.Worker.Workers;
 
 
-namespace Demo.Archivero.Api.Startup;
+namespace Demo.Archivero.Converter.Worker.Startup;
 
 public static class DependencyInjection
 {
+    public static IServiceCollection AddFileWorkers(this IServiceCollection services)
+    {
+        services.AddScoped<IWordFileMessageHandler, WordFileMessageHandler>();
+        services.AddSingleton<CreateWordFileReceiver>();
+        services.AddSingleton<DeleteWordFileReceiver>();
+        services.AddHostedService<CreateWordFileWorker>();
+        services.AddHostedService<DeleteWordFileWorker>();
+        return services;
+    }
+
     public const string DatabaseConnectionName = "ArchiveroDB";
 
     public static void AddDatabase(this IServiceCollection services, IConfiguration configuration)
@@ -41,13 +53,14 @@ public static class DependencyInjection
 
     public static IServiceCollection AddServices(this IServiceCollection services)
     {
-        services.AddScoped<IAuthService, AuthService>();
-        services.AddScoped<IFileService, FileService>();
+        services.AddScoped<IWordFileService, WordFileService>();
 
-        services.AddScoped<IBlobService, BlobService>();
         services.AddScoped<IDateTimeProvider, DateTimeProvider>();
+        services.AddScoped<IOpenXmlWordService, OpenXmlWordService>();
+        services.AddScoped<IBlobService, BlobService>();
 
         return services;
     }
 
 }
+

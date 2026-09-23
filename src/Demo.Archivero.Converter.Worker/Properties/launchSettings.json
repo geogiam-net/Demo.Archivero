@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Demo.Archivero.Converter.Worker": {
+      "commandName": "Project",
+      "environmentVariables": { "DOTNET_ENVIRONMENT": "Development" }
+    }
+  }
+}

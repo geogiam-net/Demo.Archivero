@@ -78,7 +78,7 @@
             const downloadCell = document.createElement('td');
             const download = document.createElement('a'); download.className = 'table-button download-button'; download.textContent = 'Download'; download.href = new URL(file.blobUrl, API_BASE_URL).href; download.target = '_blank'; download.rel = 'noopener'; downloadCell.append(download);
             const deleteCell = document.createElement('td');
-            const remove = document.createElement('button'); remove.className = 'table-button delete-button'; remove.type = 'button'; remove.textContent = 'Delete'; remove.dataset.fileId = file.id; remove.addEventListener('click', () => deleteFile(file.id, row)); deleteCell.append(remove);
+            const remove = document.createElement('button'); remove.className = 'table-button delete-button'; remove.type = 'button'; remove.textContent = 'Delete'; remove.dataset.fileId = file.fileId; remove.addEventListener('click', () => deleteFile(file.fileId, row)); deleteCell.append(remove);
             row.append(creation, title, downloadCell, deleteCell); body.append(row);
         });
     }

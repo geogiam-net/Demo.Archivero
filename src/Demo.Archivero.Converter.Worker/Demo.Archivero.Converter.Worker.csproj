@@ -1,25 +1,19 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Worker">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-	<UserSecretsId>54a2727d-a3da-44fc-a053-8e61fc56438e</UserSecretsId>
+    <UserSecretsId>54a2727d-a3da-44fc-a053-8e61fc56438e</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.10" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.10">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.10" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.10" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.10" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.22.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="10.2.3" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Demo.Archivero.Application\Demo.Archivero.Application.csproj" />
-    <ProjectReference Include="..\Demo.Archivero.Domain\Demo.Archivero.Domain.csproj" />
     <ProjectReference Include="..\Demo.Archivero.Infrastructure.AzureBlob\Demo.Archivero.Infrastructure.AzureBlob.csproj" />
     <ProjectReference Include="..\Demo.Archivero.Infrastructure.OpenXml\Demo.Archivero.Infrastructure.OpenXml.csproj" />
     <ProjectReference Include="..\Demo.Archivero.Infrastructure.SqlRepository\Demo.Archivero.Infrastructure.SqlRepository.csproj" />

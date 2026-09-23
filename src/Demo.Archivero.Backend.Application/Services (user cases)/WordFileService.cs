@@ -4,6 +4,7 @@ using Demo.Archivero.Application.Interfaces.Application;
 using Demo.Archivero.Application.Interfaces.Infrastructure;
 using Demo.Archivero.Application.Interfaces.Repositories;
 using Demo.Archivero.Backend.Application.Settings;
+using Demo.Archivero.Domain.Enums;
 using Microsoft.Extensions.Logging;
 using FileEntity = Demo.Archivero.Domain.Entities.File;
 
@@ -32,6 +33,11 @@ public class WordFileService(
         if (file is null)
         {
             return new ResultDto<bool>(false, Domain.Enums.Error.NotFound, new[] { "File not found." });
+        }
+
+        if(file.Status != FileStatus.InQueue)
+        {
+            return new ResultDto<bool>(false, Domain.Enums.Error.Conflict, new[] { "File is not in InQueue state." });
         }
 
         using (var stream = openXmlWordService.CreateDocument(file.Title, file.Content)) 

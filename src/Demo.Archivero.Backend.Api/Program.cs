@@ -75,7 +75,7 @@ app.UseExceptionHandler();
 app.MapAuthEndpoints();
 app.MapFileEndpoints();
 
-app.MapGet(Routes.Ping, () => Results.Ok(new
+app.MapGet(Routes.Health, () => Results.Ok(new
 {
     status = "ok",
     service = "Archivero.Backend API is up"

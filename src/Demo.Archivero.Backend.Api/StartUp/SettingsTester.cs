@@ -1,5 +1,6 @@
 using Demo.Archivero.Api.Startup;
 using Demo.Archivero.Application.Security;
+using StackExchange.Redis.Extensions.Core.Configuration;
 
 namespace Demo.Archivero.Api.StartUp;
 
@@ -14,6 +15,7 @@ internal static class SettingsTester
         RequireValue(configuration, "ArchiveroAuth:AdminPassword");
 
         TestArchiveroJwtConfiguration(configuration);
+        TestRedisConfiguration(configuration);
     }
 
     private static void TestArchiveroJwtConfiguration(IConfiguration configuration)
@@ -50,5 +52,14 @@ internal static class SettingsTester
     {
         if (string.IsNullOrWhiteSpace(configuration.GetConnectionString(name)))
             throw new InvalidOperationException($"Connection string for '{name}' is missing.");
+    }
+
+    private static void TestRedisConfiguration(IConfiguration configuration)
+    {
+        var redisConfig = configuration.GetSection("Redis").Get<RedisConfiguration>();
+        if (redisConfig == null)
+        {
+            throw new InvalidOperationException("Redis configuration is missing.");
+        }
     }
 }

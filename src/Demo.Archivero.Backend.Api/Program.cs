@@ -2,12 +2,17 @@
 using Demo.Archivero.Api.Endpoints;
 using Demo.Archivero.Api.Startup;
 using Demo.Archivero.Api.StartUp;
-using Microsoft.OpenApi;
 using Demo.Archivero.Infrastructure.ServiceBus;
+using Microsoft.OpenApi;
+using StackExchange.Redis.Extensions.Core.Configuration;
+using StackExchange.Redis.Extensions.System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
 SettingsTester.TestSettingsExist(builder.Configuration);
+
+var redisConfig = builder.Configuration.GetSection("Redis").Get<RedisConfiguration>();
+builder.Services.AddStackExchangeRedisExtensions<SystemTextJsonSerializer>(redisConfig!);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>

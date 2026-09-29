@@ -25,3 +25,4 @@
 /src/Demo.Archivero.Converter.Client/obj
 /src/Demo.Archivero.Infrastructure.ServiceBus/bin
 /src/Demo.Archivero.Infrastructure.ServiceBus/obj
+/src/Demo.Archivero.UnitTests/bin/Release/net10.0/.msCoverageSourceRootsMapping_Demo.Archivero.UnitTests

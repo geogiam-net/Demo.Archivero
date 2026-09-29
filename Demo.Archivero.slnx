@@ -3,7 +3,9 @@
   <Project Path="src/Demo.Archivero.Application/Demo.Archivero.Application.csproj" />
   <Project Path="src/Demo.Archivero.Domain/Demo.Archivero.Domain.csproj" />
   <Project Path="src/Demo.Archivero.Infrastructure.SqlRepository/Demo.Archivero.Infrastructure.SqlRepository.csproj" />
-  <Project Path="src/Demo.Archivero.UnitTests/Demo.Archivero.UnitTests.csproj" />
+  <Project Path="src/Demo.Archivero.UnitTests/Demo.Archivero.UnitTests.csproj">
+    <Build Solution="Release|*" Project="false" />
+  </Project>
   <Project Path="src/Demo.Archivero.Converter.Worker/Demo.Archivero.Converter.Worker.csproj" />
   <Project Path="src/Demo.Archivero.Frontend.Spa/Demo.Archivero.Frontend.Spa.csproj" />
   <Project Path="src/Demo.Archivero.Infrastructure.AzureBlob/Demo.Archivero.Infrastructure.AzureBlob.csproj" />

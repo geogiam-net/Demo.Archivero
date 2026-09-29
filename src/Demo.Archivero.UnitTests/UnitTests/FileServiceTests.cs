@@ -14,6 +14,25 @@ namespace Demo.Archivero.UnitTests;
 
 public class FileServiceTests
 {
+    [TestCase("Pourquoi l'utiliser")]
+    [TestCase("Été & café \"déjà vu\"")]
+    [TestCase("<script>alert('title')</script>")]
+    [TestCase("Literal &#39; and &amp; text")]
+    public async Task File_listing_preserves_title_as_plain_text(string title)
+    {
+        var repository = new Repository
+        {
+            Files = [new FileEntity { Id = 42, Title = title, BlobId = "document.docx" }]
+        };
+        var sender = new Sender(repository);
+        var service = new FileService(repository, new Users(), NullLogger<FileService>.Instance,
+            new Clock(), new Blobs(), sender, sender);
+        var result = await service.GetFilesAsync("alice", default);
+        Assert.That(result.ErrorCode, Is.EqualTo(Error.None));
+        Assert.That(result.Result.Single().Title, Is.EqualTo(title));
+        Assert.That(result.Result.Single().BlobUrl, Is.EqualTo("https://example.test/document.docx"));
+    }
+
     [Test]
     public async Task Creation_sends_persisted_id_and_canonical_username_after_save()
     {
@@ -114,6 +133,7 @@ public class FileServiceTests
 
     private sealed class Repository : IFileRepository
     {
+        public List<FileEntity> Files { get; init; } = [];
         public ResultDto<int> CreateResult { get; init; } = new(42);
         public ResultDto<bool> DeleteResult { get; init; } = new(true);
         public bool Saved { get; private set; }
@@ -130,9 +150,23 @@ public class FileServiceTests
             return Task.FromResult(DeleteResult);
         }
         public Task<FileEntity?> GetFileAsync(int id, CancellationToken ct) => throw new NotSupportedException();
-        public Task<List<FileEntity>> GetFilesAsync(int owner, CancellationToken ct) => throw new NotSupportedException();
+        public Task<List<FileEntity>> GetFilesAsync(int owner, CancellationToken ct) => Task.FromResult(Files);
         public Task<ResultDto<bool>> ReadyFileAsync(FileEntity file, AppUser user, string blobId, CancellationToken ct) => throw new NotSupportedException();
         public Task<ResultDto<bool>> DeleteFileAsync(int id, CancellationToken ct) => throw new NotSupportedException();
+    }
+
+    private sealed class Blobs : IBlobService
+    {
+        public Task<IReadOnlyDictionary<string, string>> GetTemporaryUrlsAsync(int userId,
+            IEnumerable<string> blobNames, TimeSpan expiresIn, CancellationToken cancellationToken = default)
+            => Task.FromResult<IReadOnlyDictionary<string, string>>(new Dictionary<string, string>
+            {
+                ["document.docx"] = "https://example.test/document.docx"
+            });
+        public Task<string?> UploadToBlobAsync(int userId, Stream content, CancellationToken cancellationToken = default)
+            => throw new NotSupportedException();
+        public Task<bool> DeleteBlobAsync(int userId, string blobName, CancellationToken cancellationToken = default)
+            => throw new NotSupportedException();
     }
 
     private sealed class Users : IUserRepository

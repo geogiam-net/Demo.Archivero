@@ -6,7 +6,6 @@ using Demo.Archivero.Application.Interfaces.Infrastructure;
 using Demo.Archivero.Application.Interfaces.Repositories;
 using Demo.Archivero.Application.Settings;
 using Microsoft.Extensions.Logging;
-using System.Net;
 using FileEntity = Demo.Archivero.Domain.Entities.File;
 
 namespace Demo.Archivero.Application.Services;
@@ -102,7 +101,7 @@ public class FileService(
 
         var fileDtos = files.Select(f => new FileDto(
             f.Id,
-            WebUtility.HtmlEncode(f.Title),
+            f.Title,
             f.CreatedAtUtc,
             urls.TryGetValue(f.BlobId, out var url) ? url : ""
         )).ToList();

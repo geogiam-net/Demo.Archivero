@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <Folder Include="Mocks\" />
+    <Folder Include="IntegrationTests\" />
     <Folder Include="UnitTests\" />
   </ItemGroup>
 

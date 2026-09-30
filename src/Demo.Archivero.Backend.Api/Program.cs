@@ -49,10 +49,7 @@ builder.Services.AddDatabase(builder.Configuration);
 builder.Services.AddRepositories();
 builder.Services.AddServices();
 builder.Services.AddArchiveroFileBus(builder.Configuration);
-
-#if DEBUG
 builder.Services.AddProblemDetails();
-#endif
 
 // ------------------------------------------------------------------------------------
 

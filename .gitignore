@@ -3,6 +3,9 @@
 ################################################################################
 
 /.vs
+/docker/.env
+/docker/.generated/
+/src/**/bin/Release/
 /src/Demo.Archivero.Backend.Api/bin/Debug/net10.0
 /src/Demo.Archivero.Backend.Api/obj
 /src/Demo.Archivero.Application/bin/Debug/net10.0
@@ -26,3 +29,4 @@
 /src/Demo.Archivero.Infrastructure.ServiceBus/bin
 /src/Demo.Archivero.Infrastructure.ServiceBus/obj
 /src/Demo.Archivero.UnitTests/bin/Release/net10.0/.msCoverageSourceRootsMapping_Demo.Archivero.UnitTests
+/docker/bin/

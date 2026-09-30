@@ -89,4 +89,17 @@ The App and Services can run in Azure, locally in windows or in WSL by using doc
 
 Restore packages and compile (with dotnet commands or VS)
 
-~ In construction ~
+## Docker
+
+Build and run all applications and infrastructure from a fresh Linux/WSL Docker installation:
+
+```bash
+cd docker
+cp .env.example .env
+# Fill in the blank passwords and keys in .env.
+bash run-archivero.sh
+```
+
+The script runs `docker compose -f docker-compose.yml up --build`.
+Use `sudo bash run-archivero.sh` if your account needs sudo to access Docker.
+See [docker/README.md](docker/README.md) for configuration, ports and shutdown commands.

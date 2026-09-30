@@ -1,0 +1,13 @@
+**/bin
+**/obj
+.git
+.vs
+.codex
+.agents
+**/.env
+**/.env.*
+**/secrets.json
+**/*.pfx
+**/*.pem
+docker/.generated
+docs

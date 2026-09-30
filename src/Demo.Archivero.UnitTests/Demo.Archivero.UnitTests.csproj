@@ -27,4 +27,9 @@
     <ProjectReference Include="..\Demo.Archivero.Domain\Demo.Archivero.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="10.0.10" />
+    <PackageReference Include="Moq" Version="4.20.72" />
+    <ProjectReference Include="../Demo.Archivero.Backend.Api/Demo.Archivero.Backend.Api.csproj" />
+  </ItemGroup>
 </Project>
